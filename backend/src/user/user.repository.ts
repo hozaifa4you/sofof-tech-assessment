@@ -21,5 +21,9 @@ export class UserRepository {
       return this.userRepository.findOne({ where: { email } });
    }
 
+   public async findById(id: number) {
+      return this.userRepository.findOne({ where: { id } });
+   }
+
    public async delete() {}
 }
