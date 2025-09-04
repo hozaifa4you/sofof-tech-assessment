@@ -3,6 +3,9 @@ import { AppController } from '@/app.controller';
 import { AppService } from '@/app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigType } from '@nestjs/config';
+import { TodoModule } from './todo/todo.module';
+import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
 import appConfig from '@/config/app.config';
 import dbConfig from '@/config/db.config';
 
@@ -26,6 +29,9 @@ import dbConfig from '@/config/db.config';
             };
          },
       }),
+      TodoModule,
+      AuthModule,
+      UserModule,
    ],
    controllers: [AppController],
    providers: [AppService],
