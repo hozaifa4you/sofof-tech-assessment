@@ -5,11 +5,17 @@ import {
    MenuIcon,
 } from "lucide-react";
 import Link from "next/link";
+import type { ComponentType } from "react";
 import { SearchTodos } from "@/components/app/todos/search-todos";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 
-export type Todo = { id: number; title: string; url: string; Icon: any };
+export type Todo = {
+   id: number;
+   title: string;
+   url: string;
+   Icon: ComponentType<{ className?: string }>;
+};
 
 const todos: Todo[] = [
    {
