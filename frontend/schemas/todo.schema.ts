@@ -11,9 +11,9 @@ export const createTodoSchema = z.object({
       .default("pending"),
    image: z
       .instanceof(File)
-      .optional()
-      .refine((file) => file && file.size <= 1 * 1024 * 1024, {
+      .refine((file) => file.size <= 1 * 1024 * 1024, {
          message: "Image size should be less than 1MB",
       })
-      .or(z.literal("")),
+      .optional()
+      .or(z.literal("").optional()),
 });

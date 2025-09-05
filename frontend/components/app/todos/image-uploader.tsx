@@ -1,13 +1,18 @@
 "use client";
 import { AlertCircleIcon, ImageUpIcon, XIcon } from "lucide-react";
 import Image from "next/image";
+import type { RefObject } from "react";
 import { type FileWithPreview, useFileUpload } from "@/hooks/use-file-upload";
 
 interface ImageUploaderProps {
    handleImageAdd: (files: FileWithPreview[]) => void;
+   onRemoveFile: RefObject<HTMLInputElement | null>;
 }
 
-export function ImageUploader({ handleImageAdd }: ImageUploaderProps) {
+export function ImageUploader({
+   handleImageAdd,
+   onRemoveFile,
+}: ImageUploaderProps) {
    const maxSizeMB = 1;
    const maxSize = maxSizeMB * 1024 * 1024;
 
@@ -84,7 +89,12 @@ export function ImageUploader({ handleImageAdd }: ImageUploaderProps) {
                   <button
                      type="button"
                      className="z-50 flex size-8 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white outline-none transition-[color,box-shadow] hover:bg-black/80 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
-                     onClick={() => removeFile(files[0]?.id)}
+                     onClick={() => {
+                        removeFile(files[0]?.id);
+                        if (onRemoveFile.current) {
+                           onRemoveFile.current.files = null;
+                        }
+                     }}
                      aria-label="Remove image"
                   >
                      <XIcon className="size-4" aria-hidden="true" />

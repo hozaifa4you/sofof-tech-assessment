@@ -1,7 +1,7 @@
 "use client";
 import { LoaderCircleIcon } from "lucide-react";
 import Form from "next/form";
-import { useActionState, useEffect, useRef } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { createTodo } from "@/actions/todo.action";
 import { TodoHeader } from "@/components/app/todos/header";
@@ -23,6 +23,8 @@ const NewTodoPage = () => {
    const [state, action, pending] = useActionState(createTodo, null);
    const imageInputRef = useRef<HTMLInputElement>(null);
    const formRef = useRef<HTMLFormElement>(null);
+   const [title, setTitle] = useState("");
+   const [date, setdate] = useState("");
 
    const handleImageAdd = (files: FileWithPreview[]) => {
       if (files.length > 0 && imageInputRef.current) {
@@ -39,6 +41,8 @@ const NewTodoPage = () => {
    useEffect(() => {
       if (state?.success) {
          formRef.current?.reset();
+         setTitle("");
+         setdate("");
          toast.success("Todo", { description: "Todo created successfully" });
       }
 
@@ -66,6 +70,8 @@ const NewTodoPage = () => {
                               Todo Title<span className="text-primary">*</span>
                            </>
                         }
+                        value={title}
+                        onChange={setTitle}
                      />
                      {state?.errors?.title && (
                         <p
@@ -92,6 +98,8 @@ const NewTodoPage = () => {
                               <span className="text-primary">*</span>
                            </>
                         }
+                        value={date}
+                        onChange={setdate}
                      />
                      {state?.errors?.date && (
                         <p
@@ -203,7 +211,10 @@ const NewTodoPage = () => {
                         Thumbnail
                         <span className="text-black/40">(Optional)</span>
                      </Label>
-                     <ImageUploader handleImageAdd={handleImageAdd} />
+                     <ImageUploader
+                        handleImageAdd={handleImageAdd}
+                        onRemoveFile={imageInputRef}
+                     />
                      <input
                         type="file"
                         id="thumbnail-input"
