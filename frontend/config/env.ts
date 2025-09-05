@@ -9,5 +9,8 @@ export const env = {
    nextPublicApiUrl: process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3333",
    jwtSecret: process.env.JWT_SECRET ?? "your_jwt_secret",
    jwtExpiration: process.env.JWT_EXPIRATION ?? "1d",
-   jwtExpirationNumber: process.env.JWT_EXPIRATION_NUMBER ?? 86400,
+   jwtExpirationNumber: parseInt(
+      process.env.JWT_EXPIRATION_NUMBER ?? "86400",
+      10,
+   ),
 };
