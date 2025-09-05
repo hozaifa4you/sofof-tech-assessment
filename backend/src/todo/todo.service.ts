@@ -30,8 +30,8 @@ export class TodoService {
       return { success: true };
    }
 
-   async findAll(userId: number) {
-      return this.todoRepository.findAll(userId);
+   async findAll(userId: number, date?: Date) {
+      return this.todoRepository.findAll(userId, date);
    }
 
    async findById(id: number) {

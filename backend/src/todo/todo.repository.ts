@@ -19,11 +19,14 @@ export class TodoRepository {
       return this.todoRepository.save(todo);
    }
 
-   async findAll(userId: number) {
-      return this.todoRepository.find({
-         where: { user: { id: userId } },
-         order: { created_at: 'desc' },
-      });
+   async findAll(userId: number, date?: Date) {
+      const query = this.todoRepository.createQueryBuilder('todo');
+      query.where({ user: { id: userId } });
+      if (date) {
+         query.andWhere('todo.date = :date', { date });
+      }
+      query.orderBy('todo.created_at', 'DESC');
+      return query.getMany();
    }
 
    async findById(id: number) {

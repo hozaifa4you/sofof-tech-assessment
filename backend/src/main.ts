@@ -10,7 +10,7 @@ async function bootstrap() {
    const app = await NestFactory.create<NestExpressApplication>(AppModule);
    const config = app.get<ConfigType<typeof appConfig>>(appConfig.KEY);
 
-   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
    app.setGlobalPrefix('/api/v1');
    app.enableCors({
       origin: [config.clientUrl!],

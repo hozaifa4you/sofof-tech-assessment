@@ -11,6 +11,7 @@ import {
    UseGuards,
    UseInterceptors,
    UploadedFile,
+   Query,
 } from '@nestjs/common';
 import { TodoService } from '@/todo/todo.service';
 import { CreateTodoDto } from '@/todo/dto/create-todo.dto';
@@ -23,6 +24,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import fs from 'fs';
 import path from 'path';
+import { GetTodoDatePipe } from './pipes/get-todo-date.pipe';
 
 @UseGuards(JwtGuard)
 @Controller('todos')
@@ -66,8 +68,11 @@ export class TodoController {
 
    @HttpCode(HttpStatus.OK)
    @Get()
-   async findAll(@AuthUser() user: AuthUserType) {
-      return this.todoService.findAll(user.id);
+   async findAll(
+      @AuthUser() user: AuthUserType,
+      @Query('date', GetTodoDatePipe) date?: Date,
+   ) {
+      return this.todoService.findAll(user.id, date);
    }
 
    @HttpCode(HttpStatus.OK)
