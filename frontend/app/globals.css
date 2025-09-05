@@ -133,3 +133,11 @@ button {
 .active {
    @apply bg-primary/10 text-primary rounded-md;
 }
+
+.color-text {
+   @apply text-black/40;
+}
+
+.header {
+   @apply font-primary font-semibold text-[28px] text-black/70;
+}
