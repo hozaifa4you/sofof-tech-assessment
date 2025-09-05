@@ -1,0 +1,19 @@
+import z from "zod";
+
+export const createTodoSchema = z.object({
+   title: z.string().min(1).max(100),
+   date: z.coerce.date(),
+   description: z.string().min(10).max(500),
+   priority: z.enum(["low", "medium", "high"]).default("low"),
+   status: z
+      .enum(["pending", "is_progress", "done", "canceled"])
+      .optional()
+      .default("pending"),
+   image: z
+      .instanceof(File)
+      .optional()
+      .refine((file) => file && file.size <= 1 * 1024 * 1024, {
+         message: "Image size should be less than 1MB",
+      })
+      .or(z.literal("")),
+});

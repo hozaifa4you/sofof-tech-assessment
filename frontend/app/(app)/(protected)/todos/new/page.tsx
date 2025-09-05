@@ -1,4 +1,5 @@
 "use client";
+import { LoaderCircleIcon } from "lucide-react";
 import Form from "next/form";
 import { useActionState, useRef } from "react";
 import { createTodo } from "@/actions/todo.action";
@@ -25,9 +26,11 @@ const NewTodoPage = () => {
       if (files.length > 0 && imageInputRef.current) {
          const fileList = files.map((file) => file.file);
 
-         console.log(fileList);
-
-         imageInputRef.current.files = fileList as unknown as FileList;
+         const dataTransfer = new DataTransfer();
+         fileList.forEach((file) => {
+            dataTransfer.items.add(file as unknown as File);
+         });
+         imageInputRef.current.files = dataTransfer.files;
       }
    };
 
@@ -37,27 +40,56 @@ const NewTodoPage = () => {
          <div className="mx-auto max-w-3xl">
             <Form action={action}>
                <div className="grid gap-4 md:grid-cols-2">
-                  <InputWithClear
-                     name="title"
-                     label={
-                        <>
-                           Todo Title<span className="text-primary">*</span>
-                        </>
-                     }
-                     placeholder="e.g. Buy groceries"
-                     type="text"
-                  />
+                  <div>
+                     <InputWithClear
+                        name="title"
+                        placeholder="e.g. Buy groceries"
+                        type="text"
+                        defaultValue={
+                           (state?.state.title as unknown as string) ?? ""
+                        }
+                        label={
+                           <>
+                              Todo Title<span className="text-primary">*</span>
+                           </>
+                        }
+                     />
+                     {state?.errors.title && (
+                        <p
+                           className="mt-2 text-destructive text-xs"
+                           role="alert"
+                           aria-live="polite"
+                        >
+                           {state.errors.title}
+                        </p>
+                     )}
+                  </div>
 
-                  <InputWithClear
-                     name="date"
-                     label={
-                        <>
-                           Starting Date<span className="text-primary">*</span>
-                        </>
-                     }
-                     placeholder="e.g. 2023-01-01"
-                     type="datetime-local"
-                  />
+                  <div>
+                     <InputWithClear
+                        name="date"
+                        placeholder="e.g. 2023-01-01"
+                        type="datetime-local"
+                        defaultValue={
+                           (state?.state.date as unknown as string) ?? ""
+                        }
+                        label={
+                           <>
+                              Starting Date
+                              <span className="text-primary">*</span>
+                           </>
+                        }
+                     />
+                     {state?.errors.date && (
+                        <p
+                           className="mt-2 text-destructive text-xs"
+                           role="alert"
+                           aria-live="polite"
+                        >
+                           {state.errors.date}
+                        </p>
+                     )}
+                  </div>
 
                   <div className="md:col-span-2">
                      <div className="*:not-first:mt-2">
@@ -68,22 +100,66 @@ const NewTodoPage = () => {
                            id="description"
                            placeholder="Write a description for your todo..."
                            name="description"
-                        />
+                        >
+                           {(state?.state.description as unknown as string) ??
+                              ""}
+                        </Textarea>
+                        {state?.errors.description && (
+                           <p
+                              className="mt-2 text-destructive text-xs"
+                              role="alert"
+                              aria-live="polite"
+                           >
+                              {state.errors.description}
+                           </p>
+                        )}
+                     </div>
+                  </div>
+
+                  <div>
+                     <Label htmlFor="priority" className="mb-2">
+                        Priority<span className="text-primary">*</span>
+                     </Label>
+                     <Select
+                        name="priority"
+                        defaultValue={
+                           (state?.state.priority as unknown as string) ?? ""
+                        }
+                     >
+                        <SelectTrigger className="w-full">
+                           <SelectValue placeholder="Select a Priority" />
+                        </SelectTrigger>
+                        <SelectContent>
+                           <SelectItem value="low">Low</SelectItem>
+                           <SelectItem value="medium">Medium</SelectItem>
+                           <SelectItem value="high">High</SelectItem>
+                        </SelectContent>
+                     </Select>
+
+                     {state?.errors.priority && (
                         <p
                            className="mt-2 text-destructive text-xs"
                            role="alert"
                            aria-live="polite"
                         >
-                           Message should be at least 10 characters
+                           {state.errors.priority}
                         </p>
-                     </div>
+                     )}
                   </div>
 
                   <div>
                      <Label htmlFor="status" className="mb-2">
-                        Status<span className="text-primary">*</span>
+                        Status
+                        <span className="text-black/70">
+                           (Default: Pending)
+                        </span>
                      </Label>
-                     <Select name="status">
+                     <Select
+                        name="status"
+                        defaultValue={
+                           (state?.state.status as unknown as string) ?? ""
+                        }
+                     >
                         <SelectTrigger className="w-full">
                            <SelectValue placeholder="Select a Status" />
                         </SelectTrigger>
@@ -96,22 +172,16 @@ const NewTodoPage = () => {
                            <SelectItem value="canceled">Canceled</SelectItem>
                         </SelectContent>
                      </Select>
-                  </div>
 
-                  <div>
-                     <Label htmlFor="priority" className="mb-2">
-                        Priority<span className="text-primary">*</span>
-                     </Label>
-                     <Select name="priority">
-                        <SelectTrigger className="w-full">
-                           <SelectValue placeholder="Select a Priority" />
-                        </SelectTrigger>
-                        <SelectContent>
-                           <SelectItem value="low">Low</SelectItem>
-                           <SelectItem value="medium">Medium</SelectItem>
-                           <SelectItem value="high">High</SelectItem>
-                        </SelectContent>
-                     </Select>
+                     {state?.errors.status && (
+                        <p
+                           className="mt-2 text-destructive text-xs"
+                           role="alert"
+                           aria-live="polite"
+                        >
+                           {state.errors.status}
+                        </p>
+                     )}
                   </div>
 
                   <div className="md:col-span-2">
@@ -127,6 +197,16 @@ const NewTodoPage = () => {
                         ref={imageInputRef}
                         name="image"
                      />
+
+                     {state?.errors.image && (
+                        <p
+                           className="mt-2 text-destructive text-xs"
+                           role="alert"
+                           aria-live="polite"
+                        >
+                           {state.errors.image}
+                        </p>
+                     )}
                   </div>
 
                   <div className="flex justify-between md:col-span-2">
@@ -134,6 +214,13 @@ const NewTodoPage = () => {
                         Cancel
                      </Button>
                      <Button type="submit" size="lg">
+                        {pending && (
+                           <LoaderCircleIcon
+                              className="-ms-1 animate-spin"
+                              size={16}
+                              aria-hidden="true"
+                           />
+                        )}{" "}
                         Create Now
                      </Button>
                   </div>

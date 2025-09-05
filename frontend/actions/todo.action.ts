@@ -1,4 +1,6 @@
 "use server";
+import { formatErrors } from "@/schemas";
+import { createTodoSchema } from "@/schemas/todo.schema";
 import "server-only";
 
 export const createTodo = async (
@@ -14,5 +16,21 @@ export const createTodo = async (
       status: formData.get("status"),
    };
 
-   console.log(data);
+   const {
+      success,
+      data: parsedData,
+      error,
+   } = await createTodoSchema.safeParseAsync(data);
+
+   if (!success) {
+      data.image = null;
+
+      return {
+         success: false,
+         state: data,
+         errors: formatErrors(error),
+      };
+   }
+
+   console.log(parsedData);
 };

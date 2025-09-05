@@ -10,6 +10,7 @@ interface InputWithClearProps {
    placeholder?: string;
    value?: string;
    name?: string;
+   defaultValue?: string;
    onChange?: (value: string) => void;
 }
 
@@ -42,6 +43,7 @@ export default function InputWithClear({ ...props }: InputWithClearProps) {
                      : setValue(e.target.value)
                }
                name={props.name}
+               defaultValue={props.defaultValue}
             />
             {(props.value || value) && (
                <button

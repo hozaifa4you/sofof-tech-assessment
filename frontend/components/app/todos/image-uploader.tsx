@@ -57,7 +57,7 @@ export function ImageUploader({ handleImageAdd }: ImageUploaderProps) {
                      <Image
                         src={previewUrl}
                         alt={files[0]?.file?.name || "Uploaded image"}
-                        className="size-full object-cover"
+                        className="size-full object-contain"
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                      />

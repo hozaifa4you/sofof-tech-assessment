@@ -278,6 +278,7 @@ export const useFileUpload = (
          setState((prev) => {
             const fileToRemove = prev.files.find((file) => file.id === id);
             if (
+               // biome-ignore lint/complexity/useOptionalChain: <explanation>
                fileToRemove &&
                fileToRemove.preview &&
                fileToRemove.file instanceof File &&
