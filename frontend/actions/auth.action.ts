@@ -85,5 +85,5 @@ export async function signin(_initialState: unknown, formData: FormData) {
       user: result.user,
    });
 
-   return redirect("/dashboard");
+   return redirect("/todos");
 }

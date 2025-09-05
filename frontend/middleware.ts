@@ -5,7 +5,7 @@ import { Role } from "@/types/auth";
 const routePermissions = {
    guestOnly: ["/signin", "/signup", "/forgot-password"],
    protected: {
-      customer: ["/dashboard"],
+      customer: ["/todos"],
       admin: ["/control-panel"],
    },
 };
@@ -44,7 +44,7 @@ export async function middleware(request: NextRequest) {
 
    if (matchesPath(pathname, routePermissions.guestOnly)) {
       if (session?.user) {
-         return NextResponse.redirect(new URL("/dashboard", request.url));
+         return NextResponse.redirect(new URL("/todos", request.url));
       }
       return NextResponse.next();
    }
@@ -74,16 +74,7 @@ export async function middleware(request: NextRequest) {
 export const config = {
    matcher: [
       // Protected routes
-      "/dashboard/:path*",
-      "/profile/:path*",
-      "/settings/:path*",
-      "/upload/:path*",
-
-      // Admin routes
-      "/admin/:path*",
-      "/users/:path*",
-      "/analytics/:path*",
-      "/reports/:path*",
+      "/todos/:path*",
 
       // Super Admin routes
       "/control-panel/:path*",
@@ -95,9 +86,5 @@ export const config = {
       "/signup",
       "/forgot-password",
       "/reset-password",
-
-      // Account status route
-      "/account-status",
-      "/unauthorized",
    ],
 };
