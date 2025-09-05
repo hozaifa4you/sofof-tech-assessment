@@ -1,10 +1,16 @@
 "use client";
-import { EyeIcon, EyeOffIcon, LockIcon, MailIcon } from "lucide-react";
+import {
+   EyeIcon,
+   EyeOffIcon,
+   LoaderCircleIcon,
+   LockIcon,
+   MailIcon,
+} from "lucide-react";
+import Form from "next/form";
 import Link from "next/link";
 import { useActionState, useEffect, useState } from "react";
-import Form from "next/form";
-import { signin } from "@/actions/auth.action";
 import { toast } from "sonner";
+import { signin } from "@/actions/auth.action";
 import { Button } from "@/components/ui/button";
 
 export const SigninForm: React.FC = () => {
@@ -92,7 +98,18 @@ export const SigninForm: React.FC = () => {
             </p>
          </div>
 
-         <Button type="submit">Login</Button>
+         <div className="flex items-center justify-center">
+            <Button size="lg" type="submit">
+               {pending && (
+                  <LoaderCircleIcon
+                     className="-ms-1 animate-spin"
+                     size={16}
+                     aria-hidden="true"
+                  />
+               )}{" "}
+               Login
+            </Button>
+         </div>
       </Form>
    );
 };

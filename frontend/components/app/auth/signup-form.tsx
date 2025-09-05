@@ -1,17 +1,18 @@
 "use client";
-import { signup } from "@/actions/auth.action";
 import {
    EyeIcon,
    EyeOffIcon,
+   LoaderCircleIcon,
    LockIcon,
    MailIcon,
    UserIcon,
 } from "lucide-react";
-import Link from "next/link";
-import { useActionState, useEffect, useState } from "react";
 import Form from "next/form";
-import { toast } from "sonner";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useActionState, useEffect, useState } from "react";
+import { toast } from "sonner";
+import { signup } from "@/actions/auth.action";
 import { Button } from "@/components/ui/button";
 
 export const SignupForm: React.FC = () => {
@@ -22,6 +23,8 @@ export const SignupForm: React.FC = () => {
    const togglePasswordVisibility = () => {
       setPasswordVisible(!passwordVisible);
    };
+
+   console.log(state);
 
    useEffect(() => {
       if (state?.success && state?.message) {
@@ -141,7 +144,18 @@ export const SignupForm: React.FC = () => {
             </p>
          </div>
 
-         <Button type="submit">Get Started</Button>
+         <div className="flex items-center justify-center">
+            <Button type="submit" size="lg">
+               {pending && (
+                  <LoaderCircleIcon
+                     className="-ms-1 animate-spin"
+                     size={16}
+                     aria-hidden="true"
+                  />
+               )}{" "}
+               Create Account
+            </Button>
+         </div>
       </Form>
    );
 };

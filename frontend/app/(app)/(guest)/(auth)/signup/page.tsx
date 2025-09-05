@@ -1,6 +1,6 @@
+import Image from "next/image";
 import { SignupForm } from "@/components/app/auth/signup-form";
 import { FacebookIcon, GitHubIcon, GoogleIcon } from "@/components/icons";
-import Image from "next/image";
 
 const SignupPage = () => {
    return (
@@ -9,7 +9,7 @@ const SignupPage = () => {
             <div className="mb-6 flex justify-center">
                <div className="bg-accent border-border flex h-12 w-12 items-center justify-center rounded-lg border">
                   <Image
-                     src="/assets/logo-fill.svg"
+                     src="/assets/logo.svg"
                      alt="Logo"
                      width={25}
                      height={25}

@@ -4,7 +4,7 @@ import { jwtVerify, SignJWT } from "jose";
 import { cookies } from "next/headers";
 import { env } from "@/config/env";
 
-const sessionId = "auth.session";
+const sessionId = "todo.session";
 
 export type Session = {
    user: {
