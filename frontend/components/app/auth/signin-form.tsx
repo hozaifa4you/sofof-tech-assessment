@@ -1,0 +1,98 @@
+"use client";
+import { EyeIcon, EyeOffIcon, LockIcon, MailIcon } from "lucide-react";
+import Link from "next/link";
+import { useActionState, useEffect, useState } from "react";
+import Form from "next/form";
+import { signin } from "@/actions/auth.action";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+
+export const SigninForm: React.FC = () => {
+   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
+   const [state, action, pending] = useActionState(signin, null);
+
+   const togglePasswordVisibility = () => {
+      setPasswordVisible(!passwordVisible);
+   };
+
+   useEffect(() => {
+      if (!state?.success && state?.message) {
+         toast.error("Signin", {
+            description: state.message,
+         });
+      }
+   }, [state?.message, state?.success]);
+
+   return (
+      <Form action={action} className="space-y-5">
+         {/* Email Input */}
+         <div>
+            <div className="relative">
+               <span className="text-muted-foreground absolute inset-y-0 left-0 flex items-center pl-3">
+                  <MailIcon className="size-5" />
+               </span>
+               <input
+                  type="email"
+                  placeholder="Email"
+                  aria-label="Email"
+                  name="email"
+                  defaultValue={
+                     (state?.state?.email as unknown as string) || ""
+                  }
+                  className="bg-input border-border focus:ring-ring focus:border-ring placeholder:text-muted-foreground text-foreground w-full rounded-lg border py-3 pr-4 pl-10 transition duration-300 outline-none focus:ring-2"
+               />
+            </div>
+            {state?.errors?.email && (
+               <p className="mt-0.5 text-red-500">{state.errors.email}</p>
+            )}
+         </div>
+
+         {/* Password Input */}
+         <div>
+            <div className="relative">
+               <span className="text-muted-foreground absolute inset-y-0 left-0 flex items-center pl-3">
+                  <LockIcon className="size-5" />
+               </span>
+               <input
+                  type={passwordVisible ? "text" : "password"}
+                  placeholder="Password"
+                  aria-label="Password"
+                  name="password"
+                  className="bg-input border-border focus:ring-ring focus:border-ring placeholder:text-muted-foreground text-foreground w-full rounded-lg border py-3 pr-10 pl-10 transition duration-300 outline-none focus:ring-2"
+               />
+               <button
+                  type="button"
+                  onClick={togglePasswordVisibility}
+                  className="text-muted-foreground hover:text-foreground absolute inset-y-0 right-0 flex items-center pr-3"
+                  aria-label={
+                     passwordVisible ? "Hide password" : "Show password"
+                  }
+               >
+                  {passwordVisible ? (
+                     <EyeOffIcon className="size-5" />
+                  ) : (
+                     <EyeIcon className="size-5" />
+                  )}
+               </button>
+            </div>
+            {state?.errors?.password && (
+               <p className="mt-0.5 text-red-500">{state.errors.password}</p>
+            )}
+         </div>
+
+         <div className="text-right">
+            <p className="text-muted-foreground text-sm font-medium">
+               Forgot password?{" "}
+               <Link
+                  href="/forgot-password"
+                  className="text-primary font-medium hover:underline"
+               >
+                  Reset it here
+               </Link>
+            </p>
+         </div>
+
+         <Button type="submit">Login</Button>
+      </Form>
+   );
+};
