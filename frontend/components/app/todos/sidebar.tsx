@@ -1,3 +1,4 @@
+"use client";
 import {
    CalendarSyncIcon,
    ChevronsRightIcon,
@@ -5,10 +6,12 @@ import {
    MenuIcon,
 } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import type { ComponentType } from "react";
 import { SearchTodos } from "@/components/app/todos/search-todos";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export type Todo = {
    id: number;
@@ -29,6 +32,8 @@ const todos: Todo[] = [
 ];
 
 const Sidebar = () => {
+   const pathname = usePathname();
+
    return (
       <aside className="h-screen w-full max-w-[340px] p-5">
          <div className="h-full w-full rounded-xl bg-accent p-4">
@@ -52,7 +57,12 @@ const Sidebar = () => {
                   {todos.map((todo) => (
                      <li
                         key={todo.id}
-                        className="rounded-md font-medium text-black/70 transition-colors duration-200 ease-in-out hover:bg-primary/10 hover:text-primary"
+                        className={cn(
+                           "rounded-md font-medium text-black/70 transition-colors duration-200 ease-in-out hover:bg-primary/10 hover:text-primary",
+                           {
+                              active: pathname.startsWith(todo.url),
+                           },
+                        )}
                      >
                         <Link
                            href={todo.url}
