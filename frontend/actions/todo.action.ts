@@ -1,8 +1,9 @@
 "use server";
-import { fetchWithAuth } from "@/lib/authFetch";
+import "server-only";
+import { env } from "@/config/env";
+import { getSession } from "@/lib/sessions";
 import { formatErrors } from "@/schemas";
 import { createTodoSchema } from "@/schemas/todo.schema";
-import "server-only";
 
 export const createTodo = async (
    _initialState: unknown,
@@ -33,10 +34,26 @@ export const createTodo = async (
       };
    }
 
-   const response = await fetchWithAuth("/api/v1/todos", {
+   console.log(parsedData);
+
+   const formDataToSend = new FormData();
+   formDataToSend.append("title", parsedData.title);
+   formDataToSend.append("date", parsedData.date.toISOString());
+   formDataToSend.append("description", parsedData.description);
+   formDataToSend.append("priority", parsedData.priority);
+   formDataToSend.append("status", parsedData.status);
+   if (parsedData.image) {
+      formDataToSend.append("image", parsedData.image);
+   }
+
+   const sessionData = await getSession();
+
+   const response = await fetch(`${env.apiUrl}/api/v1/todos`, {
       method: "POST",
-      headers: { "Content-Type": "multipart/form-data" },
-      body: formData,
+      headers: {
+         Authorization: `Bearer ${sessionData?.access_token}`,
+      },
+      body: formDataToSend,
    });
 
    if (!response.ok) {
@@ -50,5 +67,5 @@ export const createTodo = async (
       };
    }
 
-   console.log(parsedData);
+   return { success: true };
 };

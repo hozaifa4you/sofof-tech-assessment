@@ -1,7 +1,8 @@
 "use client";
 import { LoaderCircleIcon } from "lucide-react";
 import Form from "next/form";
-import { useActionState, useRef } from "react";
+import { useActionState, useEffect, useRef } from "react";
+import { toast } from "sonner";
 import { createTodo } from "@/actions/todo.action";
 import { TodoHeader } from "@/components/app/todos/header";
 import { ImageUploader } from "@/components/app/todos/image-uploader";
@@ -21,6 +22,7 @@ import type { FileWithPreview } from "@/hooks/use-file-upload";
 const NewTodoPage = () => {
    const [state, action, pending] = useActionState(createTodo, null);
    const imageInputRef = useRef<HTMLInputElement>(null);
+   const formRef = useRef<HTMLFormElement>(null);
 
    const handleImageAdd = (files: FileWithPreview[]) => {
       if (files.length > 0 && imageInputRef.current) {
@@ -34,11 +36,22 @@ const NewTodoPage = () => {
       }
    };
 
+   useEffect(() => {
+      if (state?.success) {
+         formRef.current?.reset();
+         toast.success("Todo", { description: "Todo created successfully" });
+      }
+
+      if (!state?.success && state?.message) {
+         toast.error("Todo", { description: state?.message });
+      }
+   }, [state]);
+
    return (
       <div className="h-full rounded-xl border p-4">
          <TodoHeader title="Create New Todo" />
          <div className="mx-auto max-w-3xl">
-            <Form action={action}>
+            <Form action={action} ref={formRef}>
                <div className="grid gap-4 md:grid-cols-2">
                   <div>
                      <InputWithClear
@@ -46,7 +59,7 @@ const NewTodoPage = () => {
                         placeholder="e.g. Buy groceries"
                         type="text"
                         defaultValue={
-                           (state?.state.title as unknown as string) ?? ""
+                           (state?.state?.title as unknown as string) ?? ""
                         }
                         label={
                            <>
@@ -71,7 +84,7 @@ const NewTodoPage = () => {
                         placeholder="e.g. 2023-01-01"
                         type="datetime-local"
                         defaultValue={
-                           (state?.state.date as unknown as string) ?? ""
+                           (state?.state?.date as unknown as string) ?? ""
                         }
                         label={
                            <>
@@ -100,10 +113,11 @@ const NewTodoPage = () => {
                            id="description"
                            placeholder="Write a description for your todo..."
                            name="description"
-                        >
-                           {(state?.state.description as unknown as string) ??
-                              ""}
-                        </Textarea>
+                           defaultValue={
+                              (state?.state
+                                 ?.description as unknown as string) ?? ""
+                           }
+                        />
                         {state?.errors?.description && (
                            <p
                               className="mt-2 text-destructive text-xs"
@@ -123,7 +137,7 @@ const NewTodoPage = () => {
                      <Select
                         name="priority"
                         defaultValue={
-                           (state?.state.priority as unknown as string) ?? ""
+                           (state?.state?.priority as unknown as string) ?? ""
                         }
                      >
                         <SelectTrigger className="w-full">
@@ -157,7 +171,7 @@ const NewTodoPage = () => {
                      <Select
                         name="status"
                         defaultValue={
-                           (state?.state.status as unknown as string) ?? ""
+                           (state?.state?.status as unknown as string) ?? ""
                         }
                      >
                         <SelectTrigger className="w-full">
@@ -165,7 +179,7 @@ const NewTodoPage = () => {
                         </SelectTrigger>
                         <SelectContent>
                            <SelectItem value="pending">Pending</SelectItem>
-                           <SelectItem value="is_progress">
+                           <SelectItem value="in_progress">
                               In Progress
                            </SelectItem>
                            <SelectItem value="done">Done</SelectItem>

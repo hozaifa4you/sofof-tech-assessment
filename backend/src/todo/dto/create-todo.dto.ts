@@ -1,5 +1,6 @@
 import {
    IsDateString,
+   IsIn,
    IsNotEmpty,
    IsOptional,
    IsString,
@@ -24,10 +25,12 @@ export class CreateTodoDto {
 
    @IsString()
    @IsNotEmpty()
+   @IsIn(['low', 'medium', 'high'])
    priority: 'low' | 'medium' | 'high';
 
    @IsString()
    @IsNotEmpty()
+   @IsIn(['pending', 'in_progress', 'done', 'canceled'])
    status: 'pending' | 'in_progress' | 'done' | 'canceled';
 
    @IsOptional()

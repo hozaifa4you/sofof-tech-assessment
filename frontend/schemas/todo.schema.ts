@@ -4,9 +4,9 @@ export const createTodoSchema = z.object({
    title: z.string().min(1).max(100),
    date: z.coerce.date(),
    description: z.string().min(10).max(500),
-   priority: z.enum(["low", "medium", "high"]).default("low"),
+   priority: z.enum(["low", "medium", "high"]),
    status: z
-      .enum(["pending", "is_progress", "done", "canceled"])
+      .enum(["pending", "in_progress", "done", "canceled"])
       .optional()
       .default("pending"),
    image: z
