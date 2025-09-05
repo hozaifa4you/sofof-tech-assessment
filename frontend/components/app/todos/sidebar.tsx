@@ -21,7 +21,7 @@ const todos: Todo[] = [
    {
       id: 1,
       title: "Upcoming",
-      url: "/todos-upcoming",
+      url: "/upcoming",
       Icon: ChevronsRightIcon,
    },
    { id: 2, title: "Todo List", url: "/todos", Icon: ListTodo },
