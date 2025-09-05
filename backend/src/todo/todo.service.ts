@@ -1,26 +1,44 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
+import { TodoRepository } from './todo.repository';
 
 @Injectable()
 export class TodoService {
-   create(createTodoDto: CreateTodoDto) {
-      return 'This action adds a new todo';
+   constructor(private readonly todoRepository: TodoRepository) {}
+
+   async create(userId: number, createTodoDto: CreateTodoDto) {
+      await this.todoRepository.create(userId, createTodoDto);
+
+      return { success: true };
    }
 
-   findAll() {
-      return `This action returns all todo`;
+   async findAll(userId: number) {
+      return this.todoRepository.findAll(userId);
    }
 
-   findOne(id: number) {
-      return `This action returns a #${id} todo`;
+   async findById(id: number) {
+      const todo = await this.todoRepository.findById(id);
+      if (!todo) throw new NotFoundException(`Todo with ID ${id} not found`);
+
+      return todo;
    }
 
-   update(id: number, updateTodoDto: UpdateTodoDto) {
-      return `This action updates a #${id} todo`;
+   async update(id: number, updateTodoDto: UpdateTodoDto) {
+      const todo = await this.todoRepository.findById(id);
+      if (!todo) throw new NotFoundException(`Todo with ID ${id} not found`);
+
+      await this.todoRepository.update(id, updateTodoDto);
+
+      return { success: true };
    }
 
-   remove(id: number) {
-      return `This action removes a #${id} todo`;
+   async remove(id: number) {
+      const todo = await this.todoRepository.findById(id);
+      if (!todo) throw new NotFoundException(`Todo with ID ${id} not found`);
+
+      await this.todoRepository.remove(id);
+
+      return { success: true };
    }
 }
