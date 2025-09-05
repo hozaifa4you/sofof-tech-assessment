@@ -4,8 +4,20 @@ import { TodoCard } from "@/components/app/todos/todo-card";
 import { fetchWithAuth } from "@/lib/authFetch";
 import type { TodoType } from "@/types/todo";
 
-const TodoListPage = async () => {
-   const res = await fetchWithAuth("/api/v1/todos");
+const TodoListPage = async ({
+   searchParams,
+}: {
+   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) => {
+   const { date } = await searchParams;
+
+   let res: Response;
+   if (date) {
+      res = await fetchWithAuth(`/api/v1/todos?date=${date}`);
+   } else {
+      res = await fetchWithAuth("/api/v1/todos");
+   }
+
    if (!res.ok) {
       throw new Error("Failed to fetch todos");
    }
