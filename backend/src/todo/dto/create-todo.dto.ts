@@ -5,6 +5,7 @@ import {
    IsString,
    MaxLength,
 } from 'class-validator';
+import { IsImageFile } from '../../common/validators/file.validator';
 
 export class CreateTodoDto {
    @IsString()
@@ -29,7 +30,7 @@ export class CreateTodoDto {
    @IsNotEmpty()
    status: 'pending' | 'in_progress' | 'done' | 'canceled';
 
-   @IsString()
    @IsOptional()
-   image?: string;
+   @IsImageFile()
+   image?: any;
 }

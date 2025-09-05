@@ -9,6 +9,8 @@ import {
    HttpCode,
    HttpStatus,
    UseGuards,
+   UseInterceptors,
+   UploadedFile,
 } from '@nestjs/common';
 import { TodoService } from '@/todo/todo.service';
 import { CreateTodoDto } from '@/todo/dto/create-todo.dto';
@@ -17,6 +19,10 @@ import { JwtGuard } from '@/auth/guards/jwt.guard';
 import { AuthUser } from '@/auth/decorators/auth-user.decorator';
 import type { AuthUserType } from '@/types/auth-user';
 import { AuthorGuard } from '@/todo/guards/author.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import fs from 'fs';
+import path from 'path';
 
 @UseGuards(JwtGuard)
 @Controller('todos')
@@ -24,12 +30,38 @@ export class TodoController {
    constructor(private readonly todoService: TodoService) {}
 
    @HttpCode(HttpStatus.CREATED)
+   @UseInterceptors(
+      FileInterceptor('image', {
+         storage: diskStorage({
+            destination: (file, req, callback) => {
+               const uploadpath = './public/uploads';
+
+               if (!fs.existsSync(uploadpath)) {
+                  fs.mkdirSync(uploadpath, { recursive: true });
+               }
+
+               callback(null, uploadpath);
+            },
+            filename: (req, file, callback) => {
+               const rawFilename = file.originalname
+                  .replace(/\.[^/.]+$/, '')
+                  .replace(/\s+/g, '-')
+                  .toLowerCase();
+               const extName = path.extname(file.originalname);
+               const filename = `${rawFilename}-${Date.now()}${extName}`;
+
+               callback(null, filename);
+            },
+         }),
+      }),
+   )
    @Post()
    async create(
       @Body() createTodoDto: CreateTodoDto,
       @AuthUser() user: AuthUserType,
+      @UploadedFile() file?: Express.Multer.File,
    ) {
-      return this.todoService.create(user.id, createTodoDto);
+      return this.todoService.create(user.id, createTodoDto, file);
    }
 
    @HttpCode(HttpStatus.OK)

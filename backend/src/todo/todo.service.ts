@@ -1,13 +1,30 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 import { TodoRepository } from './todo.repository';
+import appConfig from '@/config/app.config';
+import { type ConfigType } from '@nestjs/config';
+import path from 'path';
 
 @Injectable()
 export class TodoService {
-   constructor(private readonly todoRepository: TodoRepository) {}
+   constructor(
+      private readonly todoRepository: TodoRepository,
+      @Inject(appConfig.KEY)
+      private readonly config: ConfigType<typeof appConfig>,
+   ) {}
 
-   async create(userId: number, createTodoDto: CreateTodoDto) {
+   async create(
+      userId: number,
+      createTodoDto: CreateTodoDto,
+      file?: Express.Multer.File,
+   ) {
+      if (file) {
+         const filepath = `/uploads/${file.filename}`;
+         const url = path.join(this.config.apiUrl!, filepath);
+         createTodoDto.image = url;
+      }
+
       await this.todoRepository.create(userId, createTodoDto);
 
       return { success: true };

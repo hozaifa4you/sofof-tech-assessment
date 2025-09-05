@@ -1,4 +1,5 @@
 "use server";
+import { fetchWithAuth } from "@/lib/authFetch";
 import { formatErrors } from "@/schemas";
 import { createTodoSchema } from "@/schemas/todo.schema";
 import "server-only";
@@ -29,6 +30,23 @@ export const createTodo = async (
          success: false,
          state: data,
          errors: formatErrors(error),
+      };
+   }
+
+   const response = await fetchWithAuth("/api/v1/todos", {
+      method: "POST",
+      headers: { "Content-Type": "multipart/form-data" },
+      body: formData,
+   });
+
+   if (!response.ok) {
+      const err = await response.json();
+      console.log(err);
+
+      return {
+         success: false,
+         state: data,
+         message: err.message || "Something went wrong",
       };
    }
 

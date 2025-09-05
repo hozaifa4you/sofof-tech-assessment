@@ -20,7 +20,10 @@ export class TodoRepository {
    }
 
    async findAll(userId: number) {
-      return this.todoRepository.find({ where: { user: { id: userId } } });
+      return this.todoRepository.find({
+         where: { user: { id: userId } },
+         order: { created_at: 'desc' },
+      });
    }
 
    async findById(id: number) {

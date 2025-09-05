@@ -54,7 +54,7 @@ const NewTodoPage = () => {
                            </>
                         }
                      />
-                     {state?.errors.title && (
+                     {state?.errors?.title && (
                         <p
                            className="mt-2 text-destructive text-xs"
                            role="alert"
@@ -80,7 +80,7 @@ const NewTodoPage = () => {
                            </>
                         }
                      />
-                     {state?.errors.date && (
+                     {state?.errors?.date && (
                         <p
                            className="mt-2 text-destructive text-xs"
                            role="alert"
@@ -104,7 +104,7 @@ const NewTodoPage = () => {
                            {(state?.state.description as unknown as string) ??
                               ""}
                         </Textarea>
-                        {state?.errors.description && (
+                        {state?.errors?.description && (
                            <p
                               className="mt-2 text-destructive text-xs"
                               role="alert"
@@ -136,7 +136,7 @@ const NewTodoPage = () => {
                         </SelectContent>
                      </Select>
 
-                     {state?.errors.priority && (
+                     {state?.errors?.priority && (
                         <p
                            className="mt-2 text-destructive text-xs"
                            role="alert"
@@ -173,7 +173,7 @@ const NewTodoPage = () => {
                         </SelectContent>
                      </Select>
 
-                     {state?.errors.status && (
+                     {state?.errors?.status && (
                         <p
                            className="mt-2 text-destructive text-xs"
                            role="alert"
@@ -198,7 +198,7 @@ const NewTodoPage = () => {
                         name="image"
                      />
 
-                     {state?.errors.image && (
+                     {state?.errors?.image && (
                         <p
                            className="mt-2 text-destructive text-xs"
                            role="alert"
