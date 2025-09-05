@@ -17,7 +17,7 @@ export class Todo {
    @Column({ type: 'varchar', length: 100 })
    title: string;
 
-   @Column({ type: 'text', length: 190 })
+   @Column({ type: 'varchar', length: 190 })
    description: string;
 
    @Column({ type: 'enum', enum: ['low', 'medium', 'high'], default: 'medium' })

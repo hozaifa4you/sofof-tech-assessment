@@ -19,7 +19,7 @@ import type { AuthUserType } from '@/types/auth-user';
 import { AuthorGuard } from '@/todo/guards/author.guard';
 
 @UseGuards(JwtGuard)
-@Controller('todo')
+@Controller('todos')
 export class TodoController {
    constructor(private readonly todoService: TodoService) {}
 

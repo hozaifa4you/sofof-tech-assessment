@@ -27,7 +27,7 @@ export class CreateTodoDto {
 
    @IsString()
    @IsNotEmpty()
-   status: 'pending' | 'done' | 'canceled';
+   status: 'pending' | 'in_progress' | 'done' | 'canceled';
 
    @IsString()
    @IsOptional()
