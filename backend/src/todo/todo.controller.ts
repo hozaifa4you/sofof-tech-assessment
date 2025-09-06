@@ -31,6 +31,12 @@ import { GetTodoDatePipe } from './pipes/get-todo-date.pipe';
 export class TodoController {
    constructor(private readonly todoService: TodoService) {}
 
+   @HttpCode(HttpStatus.OK)
+   @Get('/todays')
+   async getTodaysTodos(@AuthUser() user: AuthUserType) {
+      return this.todoService.getTodaysTodos(user.id);
+   }
+
    @HttpCode(HttpStatus.CREATED)
    @UseInterceptors(
       FileInterceptor('image', {
@@ -122,11 +128,5 @@ export class TodoController {
    @Delete(':id')
    async remove(@Param('id') id: string) {
       return this.todoService.remove(+id);
-   }
-
-   @HttpCode(HttpStatus.OK)
-   @Get('/todays')
-   async getTodaysTodos(@AuthUser() user: AuthUserType) {
-      return this.todoService.getTodaysTodos(user.id);
    }
 }
