@@ -5,10 +5,10 @@ export interface CalendarEvent {
    title: string;
    description?: string;
    start: Date;
-   end: Date;
-   allDay?: boolean;
    color?: EventColor;
-   location?: string;
+   status?: string;
+   priority?: string;
+   image: string | null;
 }
 
 export type EventColor =

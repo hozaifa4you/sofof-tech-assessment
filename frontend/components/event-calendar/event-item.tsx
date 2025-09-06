@@ -1,7 +1,7 @@
 "use client";
 import type { DraggableAttributes } from "@dnd-kit/core";
 import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
-import { differenceInMinutes, format, getMinutes, isPast } from "date-fns";
+import { format, getMinutes, isPast } from "date-fns";
 import { useMemo } from "react";
 import { cn } from "@/lib/utils";
 import {
@@ -48,15 +48,10 @@ function EventWrapper({
    onMouseDown,
    onTouchStart,
 }: EventWrapperProps) {
-   // Always use the currentTime (if provided) to determine if the event is in the past
-   const displayEnd = currentTime
-      ? new Date(
-           new Date(currentTime).getTime() +
-              (new Date(event.end).getTime() - new Date(event.start).getTime()),
-        )
-      : new Date(event.end);
+   // Always use the currentTime (if provided) or the event start time to determine if the event is in the past
+   const displayTime = currentTime || new Date(event.start);
 
-   const isEventInPast = isPast(displayEnd);
+   const isEventInPast = isPast(displayTime);
 
    return (
       <button
@@ -119,31 +114,12 @@ export function EventItem({
       return currentTime || new Date(event.start);
    }, [currentTime, event.start]);
 
-   const displayEnd = useMemo(() => {
-      return currentTime
-         ? new Date(
-              new Date(currentTime).getTime() +
-                 (new Date(event.end).getTime() -
-                    new Date(event.start).getTime()),
-           )
-         : new Date(event.end);
-   }, [currentTime, event.start, event.end]);
-
-   // Calculate event duration in minutes
-   const durationMinutes = useMemo(() => {
-      return differenceInMinutes(displayEnd, displayStart);
-   }, [displayStart, displayEnd]);
+   // Calculate event duration in minutes (always 0 for single-point events)
+   const durationMinutes = 0;
 
    const getEventTime = () => {
-      if (event.allDay) return "All day";
-
-      // For short events (less than 45 minutes), only show start time
-      if (durationMinutes < 45) {
-         return formatTimeWithOptionalMinutes(displayStart);
-      }
-
-      // For longer events, show both start and end time
-      return `${formatTimeWithOptionalMinutes(displayStart)} - ${formatTimeWithOptionalMinutes(displayEnd)}`;
+      // For single-point events, only show start time
+      return formatTimeWithOptionalMinutes(displayStart);
    };
 
    if (view === "month") {
@@ -155,7 +131,7 @@ export function EventItem({
             isDragging={isDragging}
             onClick={onClick}
             className={cn(
-               "mt-[var(--event-gap)] h-[var(--event-height)] items-center text-[10px] sm:text-xs",
+               "mt-[var(--event-gap)] h-[var(--event-height)] w-full flex-shrink-0 items-center text-[10px] sm:text-xs",
                className,
             )}
             currentTime={currentTime}
@@ -166,11 +142,9 @@ export function EventItem({
          >
             {children || (
                <span className="truncate">
-                  {!event.allDay && (
-                     <span className="truncate font-normal opacity-70 sm:text-[11px]">
-                        {formatTimeWithOptionalMinutes(displayStart)}{" "}
-                     </span>
-                  )}
+                  <span className="truncate font-normal opacity-70 sm:text-[11px]">
+                     {formatTimeWithOptionalMinutes(displayStart)}{" "}
+                  </span>
                   {event.title}
                </span>
             )}
@@ -229,7 +203,7 @@ export function EventItem({
             getEventColorClasses(eventColor),
             className,
          )}
-         data-past-event={isPast(new Date(event.end)) || undefined}
+         data-past-event={isPast(new Date(event.start)) || undefined}
          onClick={onClick}
          onMouseDown={onMouseDown}
          onTouchStart={onTouchStart}
@@ -238,20 +212,9 @@ export function EventItem({
       >
          <div className="font-medium text-sm">{event.title}</div>
          <div className="text-xs opacity-70">
-            {event.allDay ? (
-               <span>All day</span>
-            ) : (
-               <span className="uppercase">
-                  {formatTimeWithOptionalMinutes(displayStart)} -{" "}
-                  {formatTimeWithOptionalMinutes(displayEnd)}
-               </span>
-            )}
-            {event.location && (
-               <>
-                  <span className="px-1 opacity-35"> · </span>
-                  <span>{event.location}</span>
-               </>
-            )}
+            <span className="uppercase">
+               {formatTimeWithOptionalMinutes(displayStart)}
+            </span>
          </div>
          {event.description && (
             <div className="my-1 text-xs opacity-90">{event.description}</div>

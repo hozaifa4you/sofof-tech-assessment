@@ -48,9 +48,9 @@ export function getBorderRadiusClasses(
  * Check if an event is a multi-day event
  */
 export function isMultiDayEvent(event: CalendarEvent): boolean {
-   const eventStart = new Date(event.start);
-   const eventEnd = new Date(event.end);
-   return event.allDay || eventStart.getDate() !== eventEnd.getDate();
+   // Since the new CalendarEvent type doesn't have end or allDay properties,
+   // all events are treated as single-day events
+   return false;
 }
 
 /**
@@ -93,16 +93,8 @@ export function getSpanningEventsForDay(
    day: Date,
 ): CalendarEvent[] {
    return events.filter((event) => {
-      if (!isMultiDayEvent(event)) return false;
-
-      const eventStart = new Date(event.start);
-      const eventEnd = new Date(event.end);
-
-      // Only include if it's not the start day but is either the end day or a middle day
-      return (
-         !isSameDay(day, eventStart) &&
-         (isSameDay(day, eventEnd) || (day > eventStart && day < eventEnd))
-      );
+      // Since all events are single-day now, no spanning events exist
+      return false;
    });
 }
 
@@ -115,12 +107,7 @@ export function getAllEventsForDay(
 ): CalendarEvent[] {
    return events.filter((event) => {
       const eventStart = new Date(event.start);
-      const eventEnd = new Date(event.end);
-      return (
-         isSameDay(day, eventStart) ||
-         isSameDay(day, eventEnd) ||
-         (day > eventStart && day < eventEnd)
-      );
+      return isSameDay(day, eventStart);
    });
 }
 
@@ -134,12 +121,7 @@ export function getAgendaEventsForDay(
    return events
       .filter((event) => {
          const eventStart = new Date(event.start);
-         const eventEnd = new Date(event.end);
-         return (
-            isSameDay(day, eventStart) ||
-            isSameDay(day, eventEnd) ||
-            (day > eventStart && day < eventEnd)
-         );
+         return isSameDay(day, eventStart);
       })
       .sort(
          (a, b) => new Date(a.start).getTime() - new Date(b.start).getTime(),

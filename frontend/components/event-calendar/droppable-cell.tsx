@@ -40,7 +40,7 @@ export function DroppableCell({
          : null;
 
    return (
-      <div
+      <button
          ref={setNodeRef}
          onClick={onClick}
          className={cn(
@@ -49,8 +49,9 @@ export function DroppableCell({
          )}
          title={formattedTime ? `${formattedTime}` : undefined}
          data-dragging={isOver && activeEvent ? true : undefined}
+         type="button"
       >
          {children}
-      </div>
+      </button>
    );
 }

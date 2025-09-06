@@ -1,10 +1,7 @@
 "use client";
 
-import React, { useMemo } from "react";
 import {
    addHours,
-   areIntervalsOverlapping,
-   differenceInMinutes,
    eachHourOfInterval,
    format,
    getHours,
@@ -12,24 +9,22 @@ import {
    isSameDay,
    startOfDay,
 } from "date-fns";
-
+import { useMemo } from "react";
+import { EndHour, StartHour } from "@/components/event-calendar/constants";
+import { cn } from "@/lib/utils";
 import {
+   type CalendarEvent,
    DraggableEvent,
    DroppableCell,
    EventItem,
-   isMultiDayEvent,
    useCurrentTimeIndicator,
    WeekCellsHeight,
-   type CalendarEvent,
 } from "./index";
-import { EndHour, StartHour } from "@/components/event-calendar/constants";
-import { cn } from "@/lib/utils";
 
 interface DayViewProps {
    currentDate: Date;
    events: CalendarEvent[];
-   onEventSelect: (event: CalendarEvent) => void;
-   onEventCreate: (startTime: Date) => void;
+   onEventClick?: (event: CalendarEvent) => void;
 }
 
 interface PositionedEvent {
@@ -41,12 +36,7 @@ interface PositionedEvent {
    zIndex: number;
 }
 
-export function DayView({
-   currentDate,
-   events,
-   onEventSelect,
-   onEventCreate,
-}: DayViewProps) {
+export function DayView({ currentDate, events, onEventClick }: DayViewProps) {
    const hours = useMemo(() => {
       const dayStart = startOfDay(currentDate);
       return eachHourOfInterval({
@@ -59,159 +49,78 @@ export function DayView({
       return events
          .filter((event) => {
             const eventStart = new Date(event.start);
-            const eventEnd = new Date(event.end);
-            return (
-               isSameDay(currentDate, eventStart) ||
-               isSameDay(currentDate, eventEnd) ||
-               (currentDate > eventStart && currentDate < eventEnd)
-            );
+            return isSameDay(currentDate, eventStart);
          })
          .sort(
             (a, b) => new Date(a.start).getTime() - new Date(b.start).getTime(),
          );
    }, [currentDate, events]);
 
-   // Filter all-day events
+   // All events are treated as single-day events (simplified)
    const allDayEvents = useMemo(() => {
-      return dayEvents.filter((event) => {
-         // Include explicitly marked all-day events or multi-day events
-         return event.allDay || isMultiDayEvent(event);
-      });
+      return dayEvents; // All events shown in day view
    }, [dayEvents]);
 
-   // Get only single-day time-based events
+   // Get time-based events (same as all events for now)
    const timeEvents = useMemo(() => {
-      return dayEvents.filter((event) => {
-         // Exclude all-day events and multi-day events
-         return !event.allDay && !isMultiDayEvent(event);
-      });
+      return dayEvents;
    }, [dayEvents]);
 
    // Process events to calculate positions
    const positionedEvents = useMemo(() => {
-      const result: PositionedEvent[] = [];
-      const dayStart = startOfDay(currentDate);
-
-      // Sort events by start time and duration
+      // Sort events by start time (simplified)
       const sortedEvents = [...timeEvents].sort((a, b) => {
          const aStart = new Date(a.start);
          const bStart = new Date(b.start);
-         const aEnd = new Date(a.end);
-         const bEnd = new Date(b.end);
-
-         // First sort by start time
-         if (aStart < bStart) return -1;
-         if (aStart > bStart) return 1;
-
-         // If start times are equal, sort by duration (longer events first)
-         const aDuration = differenceInMinutes(aEnd, aStart);
-         const bDuration = differenceInMinutes(bEnd, bStart);
-         return bDuration - aDuration;
+         return aStart.getTime() - bStart.getTime();
       });
 
-      // Track columns for overlapping events
-      const columns: { event: CalendarEvent; end: Date }[][] = [];
-
-      sortedEvents.forEach((event) => {
+      // Create positioned events (simplified - assuming 1 hour duration)
+      const positionedEvents: PositionedEvent[] = sortedEvents.map((event) => {
          const eventStart = new Date(event.start);
-         const eventEnd = new Date(event.end);
-
-         // Adjust start and end times if they're outside this day
-         const adjustedStart = isSameDay(currentDate, eventStart)
-            ? eventStart
-            : dayStart;
-         const adjustedEnd = isSameDay(currentDate, eventEnd)
-            ? eventEnd
-            : addHours(dayStart, 24);
 
          // Calculate top position and height
-         const startHour =
-            getHours(adjustedStart) + getMinutes(adjustedStart) / 60;
-         const endHour = getHours(adjustedEnd) + getMinutes(adjustedEnd) / 60;
+         const startHour = getHours(eventStart) + getMinutes(eventStart) / 60;
          const top = (startHour - StartHour) * WeekCellsHeight;
-         const height = (endHour - startHour) * WeekCellsHeight;
+         const height = WeekCellsHeight; // Default 1 hour height
 
-         // Find a column for this event
-         let columnIndex = 0;
-         let placed = false;
-
-         while (!placed) {
-            const col = columns[columnIndex] || [];
-            if (col.length === 0) {
-               columns[columnIndex] = col;
-               placed = true;
-            } else {
-               const overlaps = col.some((c) =>
-                  areIntervalsOverlapping(
-                     { start: adjustedStart, end: adjustedEnd },
-                     {
-                        start: new Date(c.event.start),
-                        end: new Date(c.event.end),
-                     },
-                  ),
-               );
-               if (!overlaps) {
-                  placed = true;
-               } else {
-                  columnIndex++;
-               }
-            }
-         }
-
-         // Ensure column is initialized before pushing
-         const currentColumn = columns[columnIndex] || [];
-         columns[columnIndex] = currentColumn;
-         currentColumn.push({ event, end: adjustedEnd });
-
-         // First column takes full width, others are indented by 10% and take 90% width
-         const width = columnIndex === 0 ? 1 : 0.9;
-         const left = columnIndex === 0 ? 0 : columnIndex * 0.1;
-
-         result.push({
+         return {
             event,
             top,
             height,
-            left,
-            width,
-            zIndex: 10 + columnIndex, // Higher columns get higher z-index
-         });
+            left: 0,
+            width: 100,
+            zIndex: 10,
+         };
       });
 
-      return result;
-   }, [currentDate, timeEvents]);
-
-   const handleEventClick = (event: CalendarEvent, e: React.MouseEvent) => {
-      e.stopPropagation();
-      onEventSelect(event);
-   };
+      return positionedEvents;
+   }, [timeEvents]);
 
    const showAllDaySection = allDayEvents.length > 0;
    const { currentTimePosition, currentTimeVisible } = useCurrentTimeIndicator(
       currentDate,
       "day",
    );
-
    return (
       <div data-slot="day-view" className="contents">
          {showAllDaySection && (
-            <div className="border-border/70 bg-muted/50 border-t">
+            <div className="border-border/70 border-t bg-muted/50">
                <div className="grid grid-cols-[3rem_1fr] sm:grid-cols-[4rem_1fr]">
                   <div className="relative">
-                     <span className="text-muted-foreground/70 absolute bottom-0 left-0 h-6 w-16 max-w-full pe-2 text-right text-[10px] sm:pe-4 sm:text-xs">
+                     <span className="absolute bottom-0 left-0 h-6 w-16 max-w-full pe-2 text-right text-[10px] text-muted-foreground/70 sm:pe-4 sm:text-xs">
                         All day
                      </span>
                   </div>
-                  <div className="border-border/70 relative border-r p-1 last:border-r-0">
+                  <div className="relative border-border/70 border-r p-1 last:border-r-0">
                      {allDayEvents.map((event) => {
                         const eventStart = new Date(event.start);
-                        const eventEnd = new Date(event.end);
                         const isFirstDay = isSameDay(currentDate, eventStart);
-                        const isLastDay = isSameDay(currentDate, eventEnd);
+                        const isLastDay = true; // Single day event
 
                         return (
                            <EventItem
                               key={`spanning-${event.id}`}
-                              onClick={(e) => handleEventClick(event, e)}
                               event={event}
                               view="month"
                               isFirstDay={isFirstDay}
@@ -227,15 +136,15 @@ export function DayView({
             </div>
          )}
 
-         <div className="border-border/70 grid flex-1 grid-cols-[3rem_1fr] overflow-hidden border-t sm:grid-cols-[4rem_1fr]">
+         <div className="grid flex-1 grid-cols-[3rem_1fr] overflow-hidden border-border/70 border-t sm:grid-cols-[4rem_1fr]">
             <div>
                {hours.map((hour, index) => (
                   <div
                      key={hour.toString()}
-                     className="border-border/70 relative h-[var(--week-cells-height)] border-b last:border-b-0"
+                     className="relative h-[var(--week-cells-height)] border-border/70 border-b last:border-b-0"
                   >
                      {index > 0 && (
-                        <span className="bg-background text-muted-foreground/70 absolute -top-3 left-0 flex h-6 w-16 max-w-full items-center justify-end pe-2 text-[10px] sm:pe-4 sm:text-xs">
+                        <span className="-top-3 absolute left-0 flex h-6 w-16 max-w-full items-center justify-end bg-background pe-2 text-[10px] text-muted-foreground/70 sm:pe-4 sm:text-xs">
                            {format(hour, "h a")}
                         </span>
                      )}
@@ -261,11 +170,9 @@ export function DayView({
                         <DraggableEvent
                            event={positionedEvent.event}
                            view="day"
-                           onClick={(e) =>
-                              handleEventClick(positionedEvent.event, e)
-                           }
                            showTime
                            height={positionedEvent.height}
+                           onClick={() => onEventClick?.(positionedEvent.event)}
                         />
                      </div>
                   </div>
@@ -278,8 +185,8 @@ export function DayView({
                      style={{ top: `${currentTimePosition}%` }}
                   >
                      <div className="relative flex items-center">
-                        <div className="bg-primary absolute -left-1 h-2 w-2 rounded-full"></div>
-                        <div className="bg-primary h-[2px] w-full"></div>
+                        <div className="-left-1 absolute h-2 w-2 rounded-full bg-primary"></div>
+                        <div className="h-[2px] w-full bg-primary"></div>
                      </div>
                   </div>
                )}
@@ -290,7 +197,7 @@ export function DayView({
                   return (
                      <div
                         key={hour.toString()}
-                        className="border-border/70 relative h-[var(--week-cells-height)] border-b last:border-b-0"
+                        className="relative h-[var(--week-cells-height)] border-border/70 border-b last:border-b-0"
                      >
                         {/* Quarter-hour intervals */}
                         {[0, 1, 2, 3].map((quarter) => {
@@ -311,12 +218,6 @@ export function DayView({
                                     quarter === 3 &&
                                        "top-[calc(var(--week-cells-height)/4*3)]",
                                  )}
-                                 onClick={() => {
-                                    const startTime = new Date(currentDate);
-                                    startTime.setHours(hourValue);
-                                    startTime.setMinutes(quarter * 15);
-                                    onEventCreate(startTime);
-                                 }}
                               />
                            );
                         })}

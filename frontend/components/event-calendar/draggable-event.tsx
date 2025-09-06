@@ -1,15 +1,8 @@
 "use client";
-
-import { useRef, useState } from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import { differenceInDays } from "date-fns";
-
-import {
-   CalendarEvent,
-   EventItem,
-   useCalendarDnd,
-} from "./index";
+import { useRef, useState } from "react";
+import { type CalendarEvent, EventItem, useCalendarDnd } from "./index";
 
 interface DraggableEventProps {
    event: CalendarEvent;
@@ -44,10 +37,8 @@ export function DraggableEvent({
    } | null>(null);
 
    // Check if this is a multi-day event
-   const eventStart = new Date(event.start);
-   const eventEnd = new Date(event.end);
-   const isMultiDayEvent =
-      isMultiDay || event.allDay || differenceInDays(eventEnd, eventStart) >= 1;
+   // Since events no longer have end dates or allDay properties, all events are single-day
+   const isMultiDayEvent = isMultiDay;
 
    const { attributes, listeners, setNodeRef, transform, isDragging } =
       useDraggable({

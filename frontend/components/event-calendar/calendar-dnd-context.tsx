@@ -13,7 +13,6 @@ import {
    useSensor,
    useSensors,
 } from "@dnd-kit/core";
-import { addMinutes, differenceInMinutes } from "date-fns";
 import {
    createContext,
    type ReactNode,
@@ -292,12 +291,6 @@ export function CalendarDndProvider({
 
          // Calculate new end time based on the original duration
          const originalStart = new Date(calendarEvent.start);
-         const originalEnd = new Date(calendarEvent.end);
-         const durationMinutes = differenceInMinutes(
-            originalEnd,
-            originalStart,
-         );
-         const newEnd = addMinutes(newStart, durationMinutes);
 
          // Only update if the start time has actually changed
          const hasStartTimeChanged =
@@ -312,7 +305,6 @@ export function CalendarDndProvider({
             onEventUpdate({
                ...calendarEvent,
                start: newStart,
-               end: newEnd,
             });
          }
       } catch (error) {

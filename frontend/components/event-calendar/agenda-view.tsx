@@ -12,13 +12,13 @@ import { getAgendaEventsForDay } from "./utils";
 interface AgendaViewProps {
    currentDate: Date;
    events: CalendarEvent[];
-   onEventSelect: (event: CalendarEvent) => void;
+   onEventClick?: (event: CalendarEvent) => void;
 }
 
 export function AgendaView({
    currentDate,
    events,
-   onEventSelect,
+   onEventClick,
 }: AgendaViewProps) {
    // Show events for the next days based on constant
    const days = useMemo(() => {
@@ -27,12 +27,6 @@ export function AgendaView({
          addDays(new Date(currentDate), i),
       );
    }, [currentDate]);
-
-   const handleEventClick = (event: CalendarEvent, e: React.MouseEvent) => {
-      e.stopPropagation();
-      console.log("Agenda view event clicked:", event);
-      onEventSelect(event);
-   };
 
    // Check if there are any days with events
    const hasEvents = days.some(
@@ -75,7 +69,7 @@ export function AgendaView({
                               key={event.id}
                               event={event}
                               view="agenda"
-                              onClick={(e) => handleEventClick(event, e)}
+                              onClick={() => onEventClick?.(event)}
                            />
                         ))}
                      </div>
