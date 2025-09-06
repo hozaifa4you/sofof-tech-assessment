@@ -1,16 +1,14 @@
 "use client";
-
-import { useMemo } from "react";
 import type { DraggableAttributes } from "@dnd-kit/core";
 import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 import { differenceInMinutes, format, getMinutes, isPast } from "date-fns";
-
+import { useMemo } from "react";
+import { cn } from "@/lib/utils";
 import {
+   type CalendarEvent,
    getBorderRadiusClasses,
    getEventColorClasses,
-   type CalendarEvent,
 } from "./index";
-import { cn } from "@/lib/utils";
 
 // Using date-fns format with custom formatting:
 // 'h' - hours (1-12)
@@ -63,7 +61,7 @@ function EventWrapper({
    return (
       <button
          className={cn(
-            "focus-visible:border-ring focus-visible:ring-ring/50 flex size-full overflow-hidden px-1 text-left font-medium backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] data-dragging:cursor-grabbing data-dragging:shadow-lg data-past-event:line-through sm:px-2",
+            "flex size-full select-none overflow-hidden px-1 text-left font-medium outline-none backdrop-blur-md transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 data-dragging:cursor-grabbing data-past-event:line-through data-dragging:shadow-lg sm:px-2",
             getEventColorClasses(event.color),
             getBorderRadiusClasses(isFirstDay, isLastDay),
             className,
@@ -227,7 +225,7 @@ export function EventItem({
    return (
       <button
          className={cn(
-            "focus-visible:border-ring focus-visible:ring-ring/50 flex w-full flex-col gap-1 rounded p-2 text-left transition outline-none focus-visible:ring-[3px] data-past-event:line-through data-past-event:opacity-90",
+            "flex w-full flex-col gap-1 rounded p-2 text-left outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 data-past-event:line-through data-past-event:opacity-90",
             getEventColorClasses(eventColor),
             className,
          )}
@@ -238,7 +236,7 @@ export function EventItem({
          {...dndListeners}
          {...dndAttributes}
       >
-         <div className="text-sm font-medium">{event.title}</div>
+         <div className="font-medium text-sm">{event.title}</div>
          <div className="text-xs opacity-70">
             {event.allDay ? (
                <span>All day</span>

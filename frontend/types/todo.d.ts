@@ -9,3 +9,10 @@ export interface TodoType {
    created_at: Date;
    updated_at: Date;
 }
+
+export type ExtraJson = {
+   color?: string;
+   end?: Date;
+   allDay?: boolean;
+   location?: string;
+};

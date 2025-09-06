@@ -7,6 +7,7 @@ import { TodoModule } from './todo/todo.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { AnalyticsModule } from './analytics/analytics.module';
+import { CalendarModule } from './calendar/calendar.module';
 import appConfig from '@/config/app.config';
 import dbConfig from '@/config/db.config';
 import jwtConfig from './config/jwt.config';
@@ -38,6 +39,7 @@ import jwtConfig from './config/jwt.config';
       AuthModule,
       UserModule,
       AnalyticsModule,
+      CalendarModule,
    ],
    controllers: [AppController],
    providers: [AppService],

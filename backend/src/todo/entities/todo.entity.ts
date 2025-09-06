@@ -1,3 +1,4 @@
+import { ExtraJson } from '@/types/todo';
 import { User } from '@/user/entities/user.entity';
 import {
    Column,
@@ -35,6 +36,9 @@ export class Todo {
 
    @Column({ type: 'varchar', nullable: true })
    image: string | null;
+
+   @Column('simple-json', { nullable: true })
+   extra_json: ExtraJson | null;
 
    @CreateDateColumn()
    created_at: Date;
