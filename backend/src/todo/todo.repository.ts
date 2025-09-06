@@ -1,5 +1,5 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Between } from 'typeorm';
 import { Todo } from './entities/todo.entity';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
@@ -54,5 +54,22 @@ export class TodoRepository {
 
    async remove(id: number) {
       return this.todoRepository.delete(id);
+   }
+
+   async findTodaysTodos(userId: number) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+
+      return this.todoRepository.find({
+         where: {
+            user: { id: userId },
+            created_at: Between(today, tomorrow),
+         },
+         order: {
+            created_at: 'DESC',
+         },
+      });
    }
 }

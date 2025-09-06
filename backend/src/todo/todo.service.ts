@@ -77,4 +77,8 @@ export class TodoService {
 
       return { success: true };
    }
+
+   public async getTodaysTodos(userId: number) {
+      return this.todoRepository.findTodaysTodos(userId);
+   }
 }

@@ -123,4 +123,10 @@ export class TodoController {
    async remove(@Param('id') id: string) {
       return this.todoService.remove(+id);
    }
+
+   @HttpCode(HttpStatus.OK)
+   @Get('/todays')
+   async getTodaysTodos(@AuthUser() user: AuthUserType) {
+      return this.todoService.getTodaysTodos(user.id);
+   }
 }
