@@ -25,9 +25,13 @@ const TodayTodos = ({ todos }: TodayTodosProps) => {
          </div>
 
          <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
-            {todos.map((todo) => (
-               <TodoCard key={todo.id} {...todo} />
-            ))}
+            {todos.length > 0 ? (
+               todos.map((todo) => <TodoCard key={todo.id} {...todo} />)
+            ) : (
+               <div>
+                  <p className="text-muted-foreground">No todos for today</p>
+               </div>
+            )}
          </div>
       </div>
    );

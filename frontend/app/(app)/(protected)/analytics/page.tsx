@@ -1,9 +1,9 @@
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { TodoHeader } from "@/components/app/todos/header";
-import { ThisWeekTodos } from "@/components/app/todos/this-week-todos";
 import { TodayTodos } from "@/components/app/todos/today-todos";
-import { TomorrowTodos } from "@/components/app/todos/tomorrow-todos";
+import { TodoBarChart } from "@/components/app/todos/todo-bar-chart";
+import { TodoStatusReport } from "@/components/app/todos/todo-pie-chart";
 import { buttonVariants } from "@/components/ui/button";
 import { fetchWithAuth } from "@/lib/authFetch";
 import type { TodoType } from "@/types/todo";
@@ -32,10 +32,10 @@ const TodosPage = async () => {
          />
          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
             <div>
-               <TomorrowTodos />
+               <TodoBarChart />
             </div>
             <div>
-               <ThisWeekTodos />
+               <TodoStatusReport />
             </div>
             <div className="col-span-1 md:col-span-2">
                <TodayTodos todos={todaysTodos} />
