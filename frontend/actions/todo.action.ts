@@ -81,6 +81,8 @@ export const updateTodo = async (
       status: formData.get("status"),
    };
 
+   const id = formData.get("id");
+
    const {
       success,
       data: parsedData,
@@ -108,7 +110,7 @@ export const updateTodo = async (
 
    const sessionData = await getSession();
 
-   const response = await fetch(`${env.apiUrl}/api/v1/todos`, {
+   const response = await fetch(`${env.apiUrl}/api/v1/todos/${id}`, {
       method: "PUT",
       headers: {
          Authorization: `Bearer ${sessionData?.access_token}`,

@@ -1,6 +1,8 @@
 "use client";
 import { LoaderCircleIcon } from "lucide-react";
 import Form from "next/form";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { updateTodo } from "@/actions/todo.action";
@@ -28,9 +30,9 @@ const EditTodoForm = ({ todo }: EditTodoFormProps) => {
    const [state, action, pending] = useActionState(updateTodo, null);
    const imageInputRef = useRef<HTMLInputElement>(null);
    const formRef = useRef<HTMLFormElement>(null);
-
    const [title, setTitle] = useState(todo.title);
    const [date, setdate] = useState(formatDateForInput(todo.date));
+   const router = useRouter();
 
    const handleImageAdd = (files: FileWithPreview[]) => {
       if (files.length > 0 && imageInputRef.current) {
@@ -50,15 +52,17 @@ const EditTodoForm = ({ todo }: EditTodoFormProps) => {
          setTitle("");
          setdate("");
          toast.success("Todo", { description: "Todo updated successfully" });
+         router.push("/todos");
       }
 
       if (!state?.success && state?.message) {
          toast.error("Todo", { description: state?.message });
       }
-   }, [state]);
+   }, [state, router]);
 
    return (
       <Form action={action} ref={formRef}>
+         <input type="text" className="sr-only" name="id" value={todo.id} />
          <div className="grid gap-4 md:grid-cols-2">
             <div>
                <InputWithClear
@@ -188,32 +192,47 @@ const EditTodoForm = ({ todo }: EditTodoFormProps) => {
                )}
             </div>
 
-            <div className="md:col-span-2">
-               <Label htmlFor="thumbnail" className="mb-2">
-                  Thumbnail
-                  <span className="text-black/40">(Optional)</span>
-               </Label>
-               <ImageUploader
-                  handleImageAdd={handleImageAdd}
-                  onRemoveFile={imageInputRef}
-               />
-               <input
-                  type="file"
-                  id="thumbnail-input"
-                  className="sr-only"
-                  ref={imageInputRef}
-                  name="image"
-               />
-
-               {state?.errors?.image && (
-                  <p
-                     className="mt-2 text-destructive text-xs"
-                     role="alert"
-                     aria-live="polite"
-                  >
-                     {state.errors.image}
-                  </p>
+            <div className="flex flex-col gap-4 md:col-span-2 md:flex-row">
+               {todo.image && (
+                  <div>
+                     <Label className="mb-2">Current Thumbnail</Label>
+                     <Image
+                        src={todo.image}
+                        alt={todo.title}
+                        width={256}
+                        quality={100}
+                        height={256}
+                        className="h-full max-h-[208px] w-full rounded-md border object-contain object-center md:w-[200px]"
+                     />
+                  </div>
                )}
+               <div className="flex-1">
+                  <Label htmlFor="thumbnail" className="mb-2">
+                     Thumbnail
+                     <span className="text-black/40">(Optional)</span>
+                  </Label>
+                  <ImageUploader
+                     handleImageAdd={handleImageAdd}
+                     onRemoveFile={imageInputRef}
+                  />
+                  <input
+                     type="file"
+                     id="thumbnail-input"
+                     className="sr-only"
+                     ref={imageInputRef}
+                     name="image"
+                  />
+
+                  {state?.errors?.image && (
+                     <p
+                        className="mt-2 text-destructive text-xs"
+                        role="alert"
+                        aria-live="polite"
+                     >
+                        {state.errors.image}
+                     </p>
+                  )}
+               </div>
             </div>
 
             <div className="flex justify-between md:col-span-2">
