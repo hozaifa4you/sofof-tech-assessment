@@ -3,7 +3,7 @@ import Link from "next/link";
 import { TodoHeader } from "@/components/app/todos/header";
 import { TodayTodos } from "@/components/app/todos/today-todos";
 import { TodoBarChart } from "@/components/app/todos/todo-bar-chart";
-import { TodoStatusReport } from "@/components/app/todos/todo-pie-chart";
+import { TodoStatusReport } from "@/components/app/todos/todo-status-report-chart";
 import { buttonVariants } from "@/components/ui/button";
 import { fetchWithAuth } from "@/lib/authFetch";
 import type { TodoType } from "@/types/todo";

@@ -7,6 +7,8 @@ import {
 } from '@nestjs/common';
 import { AnalyticsService } from './analytics.service';
 import { JwtGuard } from '@/auth/guards/jwt.guard';
+import { AuthUser } from '@/auth/decorators/auth-user.decorator';
+import type { AuthUserType } from '@/types/auth-user';
 
 @UseGuards(JwtGuard)
 @Controller('analytics')
@@ -15,13 +17,13 @@ export class AnalyticsController {
 
    @HttpCode(HttpStatus.OK)
    @Get('weekly-reports')
-   public async getWeeklyTodoAnalytics() {
-      return this.analyticsService.getWeeklyTodoAnalytics();
+   async getWeeklyTodoAnalytics(@AuthUser() user: AuthUserType) {
+      return this.analyticsService.getWeeklyTodoAnalytics(user.id);
    }
 
    @HttpCode(HttpStatus.OK)
    @Get('status-reports')
-   public async getTodoStatusReport() {
-      return this.analyticsService.getTodoStatusReport();
+   async getTodoStatusReport(@AuthUser() user: AuthUserType) {
+      return this.analyticsService.getTodoStatusReport(user.id);
    }
 }
