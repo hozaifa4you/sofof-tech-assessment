@@ -72,6 +72,13 @@ export class TodoService {
    async remove(id: number) {
       const todo = await this.todoRepository.findById(id);
       if (!todo) throw new NotFoundException(`Todo with ID ${id} not found`);
+      if (todo.image) {
+         const imagePathArr = todo.image.split('/');
+         const oldImageName = imagePathArr[imagePathArr.length - 1];
+         fs.unlinkSync(
+            path.resolve(process.cwd(), 'public', 'uploads', oldImageName),
+         );
+      }
 
       await this.todoRepository.remove(id);
 

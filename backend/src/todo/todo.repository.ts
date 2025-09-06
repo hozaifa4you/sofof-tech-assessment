@@ -70,6 +70,7 @@ export class TodoRepository {
          order: {
             created_at: 'DESC',
          },
+         take: 9,
       });
    }
 }
