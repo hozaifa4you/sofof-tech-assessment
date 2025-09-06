@@ -33,6 +33,17 @@ export class TodoRepository {
       return this.todoRepository.findOne({
          where: { id },
          relations: ['user'],
+         select: {
+            created_at: true,
+            date: true,
+            description: true,
+            id: true,
+            image: true,
+            title: true,
+            priority: true,
+            status: true,
+            user: { id: true, email: true, name: true },
+         },
       });
    }
 

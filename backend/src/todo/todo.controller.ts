@@ -3,7 +3,6 @@ import {
    Get,
    Post,
    Body,
-   Patch,
    Param,
    Delete,
    HttpCode,
@@ -12,6 +11,7 @@ import {
    UseInterceptors,
    UploadedFile,
    Query,
+   Put,
 } from '@nestjs/common';
 import { TodoService } from '@/todo/todo.service';
 import { CreateTodoDto } from '@/todo/dto/create-todo.dto';
@@ -82,10 +82,39 @@ export class TodoController {
    }
 
    @HttpCode(HttpStatus.OK)
+   @UseInterceptors(
+      FileInterceptor('image', {
+         storage: diskStorage({
+            destination: (file, req, callback) => {
+               const uploadpath = './public/uploads';
+
+               if (!fs.existsSync(uploadpath)) {
+                  fs.mkdirSync(uploadpath, { recursive: true });
+               }
+
+               callback(null, uploadpath);
+            },
+            filename: (req, file, callback) => {
+               const rawFilename = file.originalname
+                  .replace(/\.[^/.]+$/, '')
+                  .replace(/\s+/g, '-')
+                  .toLowerCase();
+               const extName = path.extname(file.originalname);
+               const filename = `${rawFilename}-${Date.now()}${extName}`;
+
+               callback(null, filename);
+            },
+         }),
+      }),
+   )
    @UseGuards(AuthorGuard)
-   @Patch(':id')
-   async update(@Param('id') id: string, @Body() updateTodoDto: UpdateTodoDto) {
-      return this.todoService.update(+id, updateTodoDto);
+   @Put(':id')
+   async update(
+      @Param('id') id: string,
+      @Body() updateTodoDto: UpdateTodoDto,
+      @UploadedFile() file?: Express.Multer.File,
+   ) {
+      return this.todoService.update(+id, updateTodoDto, file);
    }
 
    @HttpCode(HttpStatus.NO_CONTENT)

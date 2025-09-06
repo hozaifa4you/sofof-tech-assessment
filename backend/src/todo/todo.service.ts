@@ -5,6 +5,7 @@ import { TodoRepository } from './todo.repository';
 import appConfig from '@/config/app.config';
 import { type ConfigType } from '@nestjs/config';
 import path from 'path';
+import fs from 'fs';
 
 @Injectable()
 export class TodoService {
@@ -41,9 +42,27 @@ export class TodoService {
       return todo;
    }
 
-   async update(id: number, updateTodoDto: UpdateTodoDto) {
+   async update(
+      id: number,
+      updateTodoDto: UpdateTodoDto,
+      file?: Express.Multer.File,
+   ) {
       const todo = await this.todoRepository.findById(id);
       if (!todo) throw new NotFoundException(`Todo with ID ${id} not found`);
+
+      if (file) {
+         const filepath = `/uploads/${file.filename}`;
+         const url = path.join(this.config.apiUrl!, filepath);
+         updateTodoDto.image = url;
+
+         if (todo.image) {
+            const imagePathArr = todo.image.split('/');
+            const oldImageName = imagePathArr[imagePathArr.length - 1];
+            fs.unlinkSync(
+               path.resolve(process.cwd(), 'public', 'uploads', oldImageName),
+            );
+         }
+      }
 
       await this.todoRepository.update(id, updateTodoDto);
 
