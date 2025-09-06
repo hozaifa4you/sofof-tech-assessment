@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { ResponsiveSidebar } from "./responsive-sidebar";
+import { ResponsiveSidebar } from "./todos/responsive-sidebar";
 
 interface TodoHeaderProps {
    title: string;

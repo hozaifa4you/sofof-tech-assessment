@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from "react";
-import { Sidebar } from "@/components/app/todos/sidebar";
+import { Sidebar } from "@/components/app/sidebar";
 
 const TodosLayout = ({ children }: PropsWithChildren) => {
    return (

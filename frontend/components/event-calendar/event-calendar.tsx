@@ -28,6 +28,7 @@ import {
    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { ResponsiveSidebar } from "../app/todos/responsive-sidebar";
 import { AgendaView } from "./agenda-view";
 import { CalendarDndProvider } from "./calendar-dnd-context";
 import {
@@ -279,6 +280,9 @@ export function EventCalendar({
                )}
             >
                <div className="flex items-center gap-1 sm:gap-4">
+                  <div className="fixed top-5 left-5 z-30 rounded-lg shadow-md lg:hidden">
+                     <ResponsiveSidebar />
+                  </div>
                   <Button
                      variant="outline"
                      className="max-[479px]:aspect-square max-[479px]:p-0!"
@@ -291,6 +295,7 @@ export function EventCalendar({
                      />
                      <span className="max-[479px]:sr-only">Today</span>
                   </Button>
+
                   <div className="flex items-center sm:gap-2">
                      <Button
                         variant="ghost"

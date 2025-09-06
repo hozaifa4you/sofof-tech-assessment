@@ -8,7 +8,7 @@ import {
    SheetTitle,
    SheetTrigger,
 } from "@/components/ui/sheet";
-import { SidebarMenu } from "./sidebar-menu";
+import { SidebarMenu } from "../sidebar-menu";
 
 const ResponsiveSidebar = () => {
    return (

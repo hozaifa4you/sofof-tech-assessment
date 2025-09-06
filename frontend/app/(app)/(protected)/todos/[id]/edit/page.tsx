@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
+import { TodoHeader } from "@/components/app/header";
 import { EditTodoForm } from "@/components/app/todos/edit-todo-form";
-import { TodoHeader } from "@/components/app/todos/header";
 import { fetchWithAuth } from "@/lib/authFetch";
 
 const EditTodoPage = async ({
