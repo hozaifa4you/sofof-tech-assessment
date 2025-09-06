@@ -23,7 +23,7 @@ export class TodoRepository {
       const query = this.todoRepository.createQueryBuilder('todo');
       query.where({ user: { id: userId } });
       if (date) {
-         query.andWhere('todo.date = :date', { date });
+         query.andWhere('DATE(todo.created_at) = DATE(:date)', { date });
       }
       query.orderBy('todo.created_at', 'DESC');
       return query.getMany();
