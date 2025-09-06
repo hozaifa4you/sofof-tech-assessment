@@ -26,7 +26,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import fs from 'fs';
 import path from 'path';
-import { GetTodoDatePipe } from './pipes/get-todo-date.pipe';
+import { ParseTodoDate } from './pipes/parse-todo-date.pipe';
 import { ParseStatusPipe } from './pipes/parse-status.pipe';
 import { TodoStatus } from '@/types/todo';
 
@@ -80,9 +80,10 @@ export class TodoController {
    @Get()
    async findAll(
       @AuthUser() user: AuthUserType,
-      @Query('date', GetTodoDatePipe) date?: Date,
+      @Query('date', ParseTodoDate) date?: Date,
+      @Query('search') search?: string,
    ) {
-      return this.todoService.findAll(user.id, date);
+      return this.todoService.findAll(user.id, date, search);
    }
 
    @HttpCode(HttpStatus.OK)

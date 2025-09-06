@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 
 @Injectable()
-export class GetTodoDatePipe implements PipeTransform {
+export class ParseTodoDate implements PipeTransform {
    transform(value: string, _metadata: ArgumentMetadata): Date | undefined {
       if (!value || value === '' || value === 'undefined') {
          return undefined;

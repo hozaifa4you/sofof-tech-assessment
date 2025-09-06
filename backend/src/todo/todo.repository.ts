@@ -20,11 +20,19 @@ export class TodoRepository {
       return this.todoRepository.save(todo);
    }
 
-   public async findAll(userId: number, date?: Date) {
+   public async findAll(userId: number, date?: Date, search?: string) {
       const query = this.todoRepository.createQueryBuilder('todo');
       query.where({ user: { id: userId } });
       if (date) {
          query.andWhere('DATE(todo.created_at) = DATE(:date)', { date });
+      }
+      if (search) {
+         query.andWhere(
+            '(LOWER(todo.title) LIKE LOWER(:search) OR LOWER(todo.description) LIKE LOWER(:search))',
+            {
+               search: `%${search}%`,
+            },
+         );
       }
       query.orderBy('todo.created_at', 'DESC');
       return query.getMany();
