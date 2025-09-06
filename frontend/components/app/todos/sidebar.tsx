@@ -23,7 +23,7 @@ const todos: Todo[] = [
       Icon: GaugeIcon,
    },
    { id: 2, title: "Todo List", url: "/todos", Icon: ListTodo },
-   { id: 3, title: "Calendar", url: "/calendar", Icon: CalendarSyncIcon },
+   { id: 3, title: "Calendar", url: "/calender", Icon: CalendarSyncIcon },
 ];
 
 const Sidebar = () => {
