@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import moment from "moment";
 import Image from "next/image";
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -91,8 +92,10 @@ const TodoCard = ({ ...todo }: TodoType) => {
                         </Button>
                      </DropdownMenuTrigger>
                      <DropdownMenuContent className="w-56" align="start">
-                        <DropdownMenuItem>
-                           <SquarePenIcon /> Edit
+                        <DropdownMenuItem asChild>
+                           <Link href={`/todos/${todo.id}/edit`}>
+                              <SquarePenIcon /> Edit
+                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem>
                            <CircleCheckBigIcon /> Mark as Done

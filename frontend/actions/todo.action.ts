@@ -34,8 +34,6 @@ export const createTodo = async (
       };
    }
 
-   console.log(parsedData);
-
    const formDataToSend = new FormData();
    formDataToSend.append("title", parsedData.title);
    formDataToSend.append("date", parsedData.date.toISOString());
@@ -63,6 +61,66 @@ export const createTodo = async (
       return {
          success: false,
          state: data,
+         message: err.message || "Something went wrong",
+      };
+   }
+
+   return { success: true };
+};
+
+export const updateTodo = async (
+   _initialState: unknown,
+   formData: FormData,
+) => {
+   const data = {
+      title: formData.get("title"),
+      date: formData.get("date"),
+      description: formData.get("description"),
+      priority: formData.get("priority"),
+      image: formData.get("image"),
+      status: formData.get("status"),
+   };
+
+   const {
+      success,
+      data: parsedData,
+      error,
+   } = await createTodoSchema.safeParseAsync(data);
+
+   if (!success) {
+      data.image = null;
+
+      return {
+         success: false,
+         errors: formatErrors(error),
+      };
+   }
+
+   const formDataToSend = new FormData();
+   formDataToSend.append("title", parsedData.title);
+   formDataToSend.append("date", parsedData.date.toISOString());
+   formDataToSend.append("description", parsedData.description);
+   formDataToSend.append("priority", parsedData.priority);
+   formDataToSend.append("status", parsedData.status);
+   if (parsedData.image) {
+      formDataToSend.append("image", parsedData.image);
+   }
+
+   const sessionData = await getSession();
+
+   const response = await fetch(`${env.apiUrl}/api/v1/todos`, {
+      method: "PUT",
+      headers: {
+         Authorization: `Bearer ${sessionData?.access_token}`,
+      },
+      body: formDataToSend,
+   });
+
+   if (!response.ok) {
+      const err = await response.json();
+
+      return {
+         success: false,
          message: err.message || "Something went wrong",
       };
    }
