@@ -6,6 +6,7 @@ import appConfig from '@/config/app.config';
 import { type ConfigType } from '@nestjs/config';
 import path from 'path';
 import fs from 'fs';
+import { TodoStatus } from '@/types/todo';
 
 @Injectable()
 export class TodoService {
@@ -87,5 +88,12 @@ export class TodoService {
 
    public async getTodaysTodos(userId: number) {
       return this.todoRepository.findTodaysTodos(userId);
+   }
+
+   public async updateStatus(todoId: number, status: TodoStatus) {
+      const todo = await this.todoRepository.findById(todoId);
+      if (!todo) throw new NotFoundException('Todo not found');
+
+      return this.todoRepository.updateStatus(todoId, status);
    }
 }

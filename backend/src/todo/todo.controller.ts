@@ -12,6 +12,7 @@ import {
    UploadedFile,
    Query,
    Put,
+   ParseIntPipe,
 } from '@nestjs/common';
 import { TodoService } from '@/todo/todo.service';
 import { CreateTodoDto } from '@/todo/dto/create-todo.dto';
@@ -25,6 +26,8 @@ import { diskStorage } from 'multer';
 import fs from 'fs';
 import path from 'path';
 import { GetTodoDatePipe } from './pipes/get-todo-date.pipe';
+import { ParseStatusPipe } from './pipes/parse-status.pipe';
+import { TodoStatus } from '@/types/todo';
 
 @UseGuards(JwtGuard)
 @Controller('todos')
@@ -83,8 +86,8 @@ export class TodoController {
 
    @HttpCode(HttpStatus.OK)
    @Get(':id')
-   async findById(@Param('id') id: string) {
-      return this.todoService.findById(+id);
+   async findById(@Param('id', ParseIntPipe) id: number) {
+      return this.todoService.findById(id);
    }
 
    @HttpCode(HttpStatus.OK)
@@ -116,11 +119,11 @@ export class TodoController {
    @UseGuards(AuthorGuard)
    @Put(':id')
    async update(
-      @Param('id') id: string,
+      @Param('id', ParseIntPipe) id: number,
       @Body() updateTodoDto: UpdateTodoDto,
       @UploadedFile() file?: Express.Multer.File,
    ) {
-      return this.todoService.update(+id, updateTodoDto, file);
+      return this.todoService.update(id, updateTodoDto, file);
    }
 
    @HttpCode(HttpStatus.NO_CONTENT)
@@ -128,5 +131,15 @@ export class TodoController {
    @Delete(':id')
    async remove(@Param('id') id: string) {
       return this.todoService.remove(+id);
+   }
+
+   @HttpCode(HttpStatus.OK)
+   @UseGuards(AuthorGuard)
+   @Put(':id/status')
+   public async updateStatus(
+      @Param('id', ParseIntPipe) id: number,
+      @Query('status', ParseStatusPipe) status: TodoStatus,
+   ) {
+      return this.todoService.updateStatus(id, status);
    }
 }

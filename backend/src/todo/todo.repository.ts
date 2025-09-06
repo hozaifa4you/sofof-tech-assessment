@@ -3,6 +3,7 @@ import { Repository, Between } from 'typeorm';
 import { Todo } from './entities/todo.entity';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
+import { TodoStatus } from '@/types/todo';
 
 export class TodoRepository {
    constructor(
@@ -10,7 +11,7 @@ export class TodoRepository {
       private readonly todoRepository: Repository<Todo>,
    ) {}
 
-   async create(userId: number, createTodoDto: CreateTodoDto) {
+   public async create(userId: number, createTodoDto: CreateTodoDto) {
       const todo = this.todoRepository.create({
          ...createTodoDto,
          date: new Date(createTodoDto.date),
@@ -19,7 +20,7 @@ export class TodoRepository {
       return this.todoRepository.save(todo);
    }
 
-   async findAll(userId: number, date?: Date) {
+   public async findAll(userId: number, date?: Date) {
       const query = this.todoRepository.createQueryBuilder('todo');
       query.where({ user: { id: userId } });
       if (date) {
@@ -29,7 +30,7 @@ export class TodoRepository {
       return query.getMany();
    }
 
-   async findById(id: number) {
+   public async findById(id: number) {
       return this.todoRepository.findOne({
          where: { id },
          relations: ['user'],
@@ -47,16 +48,16 @@ export class TodoRepository {
       });
    }
 
-   async update(id: number, updateTodoDto: UpdateTodoDto) {
+   public async update(id: number, updateTodoDto: UpdateTodoDto) {
       await this.todoRepository.update(id, updateTodoDto);
       return this.todoRepository.findOneBy({ id });
    }
 
-   async remove(id: number) {
+   public async remove(id: number) {
       return this.todoRepository.delete(id);
    }
 
-   async findTodaysTodos(userId: number) {
+   public async findTodaysTodos(userId: number) {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       const tomorrow = new Date(today);
@@ -72,5 +73,10 @@ export class TodoRepository {
          },
          take: 9,
       });
+   }
+
+   public async updateStatus(todoId: number, status: TodoStatus) {
+      await this.todoRepository.update(todoId, { status });
+      return this.todoRepository.findOneBy({ id: todoId });
    }
 }
