@@ -5,6 +5,7 @@ import {
    HourglassIcon,
    LoaderIcon,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { env } from "@/config/env";
@@ -17,6 +18,7 @@ type UpdateTodoStatusProps = {
 
 const UpdateTodoStatus = ({ status, todoId }: UpdateTodoStatusProps) => {
    const session = useSession();
+   const router = useRouter();
 
    const handleTodoStatusUpdate = async (
       newStatus: "pending" | "in_progress" | "done" | "canceled",
@@ -39,6 +41,7 @@ const UpdateTodoStatus = ({ status, todoId }: UpdateTodoStatusProps) => {
       }
 
       toast.success("Todo Update", { description: "Status updated" });
+      router.refresh();
    };
 
    return (

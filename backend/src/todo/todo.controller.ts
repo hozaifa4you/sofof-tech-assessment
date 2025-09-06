@@ -13,6 +13,7 @@ import {
    Query,
    Put,
    ParseIntPipe,
+   Patch,
 } from '@nestjs/common';
 import { TodoService } from '@/todo/todo.service';
 import { CreateTodoDto } from '@/todo/dto/create-todo.dto';
@@ -135,7 +136,7 @@ export class TodoController {
 
    @HttpCode(HttpStatus.OK)
    @UseGuards(AuthorGuard)
-   @Put(':id/status')
+   @Patch(':id/status')
    public async updateStatus(
       @Param('id', ParseIntPipe) id: number,
       @Query('status', ParseStatusPipe) status: TodoStatus,
