@@ -1,8 +1,14 @@
 import { ArrowRightIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
+import type { TodoType } from "@/types/todo";
 import { TodoCard } from "./todo-card";
 
-const TodayTodos = () => {
+interface TodayTodosProps {
+   todos: TodoType[];
+}
+
+const TodayTodos = ({ todos }: TodayTodosProps) => {
    return (
       <div className="w-full rounded-xl border p-5">
          <div className="flex flex-wrap items-center gap-2 sm:justify-between">
@@ -13,16 +19,15 @@ const TodayTodos = () => {
                </span>
             </h2>
 
-            <Button variant="link">
+            <Link href="/todos" className={buttonVariants({ variant: "link" })}>
                Show more <ArrowRightIcon />
-            </Button>
+            </Link>
          </div>
 
          <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
-            {/* <TodoCard />
-            <TodoCard />
-            <TodoCard />
-            <TodoCard /> */}
+            {todos.map((todo) => (
+               <TodoCard key={todo.id} {...todo} />
+            ))}
          </div>
       </div>
    );

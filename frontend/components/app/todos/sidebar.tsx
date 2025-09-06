@@ -1,10 +1,5 @@
 "use client";
-import {
-   CalendarSyncIcon,
-   ChevronsRightIcon,
-   ListTodo,
-   MenuIcon,
-} from "lucide-react";
+import { CalendarSyncIcon, GaugeIcon, ListTodo, MenuIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ComponentType } from "react";
@@ -23,9 +18,9 @@ export type Todo = {
 const todos: Todo[] = [
    {
       id: 1,
-      title: "Upcoming",
-      url: "/upcoming",
-      Icon: ChevronsRightIcon,
+      title: "Analytics",
+      url: "/analytics",
+      Icon: GaugeIcon,
    },
    { id: 2, title: "Todo List", url: "/todos", Icon: ListTodo },
    { id: 3, title: "Calendar", url: "/calendar", Icon: CalendarSyncIcon },
