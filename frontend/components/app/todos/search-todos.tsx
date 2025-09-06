@@ -1,23 +1,32 @@
 "use client";
 import { ArrowRightIcon, LoaderCircleIcon, SearchIcon } from "lucide-react";
-import { useEffect, useId, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useId, useState } from "react";
 import { Input } from "@/components/ui/input";
+import { useSession } from "@/hooks/use-session";
+import { useSearchStore } from "@/stores/search-store";
 
 export function SearchTodos() {
    const id = useId();
-   const [inputValue, setInputValue] = useState("");
-   const [isLoading, setIsLoading] = useState<boolean>(false);
+   const [searchInput, setInputValue] = useState("");
+   const session = useSession();
+   const router = useRouter();
+   const pathname = usePathname();
+   const { isLoading, debouncedSearchTodos, clearResults, clearError } =
+      useSearchStore();
 
-   useEffect(() => {
-      if (inputValue) {
-         setIsLoading(true);
-         const timer = setTimeout(() => {
-            setIsLoading(false);
-         }, 500);
-         return () => clearTimeout(timer);
+   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const newQuery = e.target.value;
+      setInputValue(newQuery);
+
+      if (!newQuery.trim()) {
+         clearResults();
+         clearError();
+         return;
       }
-      setIsLoading(false);
-   }, [inputValue]);
+
+      debouncedSearchTodos(newQuery, session.access_token);
+   };
 
    return (
       <div className="*:not-first:mt-2">
@@ -27,8 +36,13 @@ export function SearchTodos() {
                className="peer ps-9 pe-9"
                placeholder="Search..."
                type="search"
-               value={inputValue}
-               onChange={(e) => setInputValue(e.target.value)}
+               value={searchInput}
+               onChange={handleInputChange}
+               onClick={() => {
+                  if (pathname !== "/search") {
+                     router.push("/search");
+                  }
+               }}
             />
             <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 text-muted-foreground/80 peer-disabled:opacity-50">
                {isLoading ? (
