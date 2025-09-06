@@ -6,12 +6,17 @@ import { ConfigModule, ConfigType } from '@nestjs/config';
 import { TodoModule } from './todo/todo.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
+import { AnalyticsModule } from './analytics/analytics.module';
 import appConfig from '@/config/app.config';
 import dbConfig from '@/config/db.config';
+import jwtConfig from './config/jwt.config';
 
 @Module({
    imports: [
-      ConfigModule.forRoot({ isGlobal: true, load: [appConfig, dbConfig] }),
+      ConfigModule.forRoot({
+         isGlobal: true,
+         load: [appConfig, dbConfig, jwtConfig],
+      }),
       TypeOrmModule.forRootAsync({
          imports: [ConfigModule],
          inject: [dbConfig.KEY],
@@ -32,6 +37,7 @@ import dbConfig from '@/config/db.config';
       TodoModule,
       AuthModule,
       UserModule,
+      AnalyticsModule,
    ],
    controllers: [AppController],
    providers: [AppService],
