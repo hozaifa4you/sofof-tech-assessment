@@ -1,6 +1,7 @@
 "use server";
 import "server-only";
 import { env } from "@/config/env";
+import { fetchWithAuth } from "@/lib/authFetch";
 import { getSession } from "@/lib/sessions";
 import { formatErrors } from "@/schemas";
 import { createTodoSchema } from "@/schemas/todo.schema";
@@ -124,6 +125,26 @@ export const updateTodo = async (
       return {
          success: false,
          message: err.message || "Something went wrong",
+      };
+   }
+
+   return { success: true };
+};
+
+export const deleteTodo = async (
+   _initialState: unknown,
+   formData: FormData,
+) => {
+   const id = formData.get("id");
+
+   const response = await fetchWithAuth(`/api/v1/todos/${id}`, {
+      method: "DELETE",
+   });
+   if (!response.ok) {
+      const result = await response.json();
+      return {
+         success: false,
+         message: result.message ?? "Something went wrong",
       };
    }
 

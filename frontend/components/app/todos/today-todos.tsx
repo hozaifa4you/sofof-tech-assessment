@@ -15,7 +15,7 @@ const TodayTodos = ({ todos }: TodayTodosProps) => {
             <h2 className="header font-primary">
                Today's Todos
                <span className="color-text ml-3 rounded-l-full rounded-br-full border px-2.5 py-1 text-sm">
-                  {10}
+                  {todos.length}
                </span>
             </h2>
 
