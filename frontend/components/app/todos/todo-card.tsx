@@ -1,7 +1,6 @@
 import {
    BadgeCheckIcon,
    CheckCircleIcon,
-   CircleCheckBigIcon,
    CircleXIcon,
    ClockIcon,
    EllipsisVerticalIcon,
@@ -24,6 +23,7 @@ import {
 import { cn } from "@/lib/utils";
 import type { TodoType } from "@/types/todo";
 import { DeleteTodo, DeleteTodoModal } from "./delete-todo";
+import { UpdateTodoStatus } from "./update-todo-status";
 
 const TodoCard = ({ ...todo }: TodoType) => {
    return (
@@ -33,7 +33,7 @@ const TodoCard = ({ ...todo }: TodoType) => {
                <button type="button" className="size-fit">
                   <CheckCircleIcon className="size-4" />
                </button>
-               <div className="-left-[42px] absolute top-[65px] size-fit rotate-90">
+               <div className="-left-[45px] absolute top-[65px] size-fit origin-center rotate-90">
                   <Badge variant="secondary">
                      <ClockIcon /> {moment(todo.date).fromNow()}
                   </Badge>
@@ -98,9 +98,10 @@ const TodoCard = ({ ...todo }: TodoType) => {
                                  <SquarePenIcon /> Edit
                               </Link>
                            </DropdownMenuItem>
-                           <DropdownMenuItem>
-                              <CircleCheckBigIcon /> Mark as Done
-                           </DropdownMenuItem>
+                           <UpdateTodoStatus
+                              status={todo.status}
+                              todoId={todo.id}
+                           />
                            <DropdownMenuSeparator />
                            <DeleteTodo />
                         </DropdownMenuContent>
