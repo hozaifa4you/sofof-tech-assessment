@@ -19,35 +19,31 @@ import {
 export const description = "A pie chart with a label list";
 
 const chartData = [
-   { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-   { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-   { browser: "firefox", visitors: 187, fill: "var(--color-firefox)" },
-   { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
+   { status: "pending", todos: 275, fill: "var(--color-pending)" },
+   { status: "done", todos: 200, fill: "var(--color-done)" },
+   { status: "in_progress", todos: 187, fill: "var(--color-in_progress)" },
+   { status: "canceled", todos: 173, fill: "var(--color-canceled)" },
 ];
 
 const chartConfig = {
-   visitors: {
-      label: "Visitors",
+   todos: {
+      label: "Todos",
    },
-   chrome: {
-      label: "Chrome",
+   pending: {
+      label: "Pending",
       color: "var(--chart-1)",
    },
-   safari: {
-      label: "Safari",
+   done: {
+      label: "Done",
       color: "var(--chart-2)",
    },
-   firefox: {
-      label: "Firefox",
+   in_progress: {
+      label: "In Progress",
       color: "var(--chart-3)",
    },
-   edge: {
-      label: "Edge",
+   canceled: {
+      label: "Canceled",
       color: "var(--chart-4)",
-   },
-   other: {
-      label: "Other",
-      color: "var(--chart-5)",
    },
 } satisfies ChartConfig;
 
@@ -65,13 +61,11 @@ export function TodoStatusReport() {
             >
                <PieChart>
                   <ChartTooltip
-                     content={
-                        <ChartTooltipContent nameKey="visitors" hideLabel />
-                     }
+                     content={<ChartTooltipContent nameKey="todos" hideLabel />}
                   />
-                  <Pie data={chartData} dataKey="visitors">
+                  <Pie data={chartData} dataKey="todos">
                      <LabelList
-                        dataKey="browser"
+                        dataKey="status"
                         className="fill-background"
                         stroke="none"
                         fontSize={12}
@@ -88,7 +82,7 @@ export function TodoStatusReport() {
                Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
             </div>
             <div className="text-muted-foreground leading-none">
-               Showing total visitors for the last 6 months
+               Showing whole time todo status report
             </div>
          </CardFooter>
       </Card>
