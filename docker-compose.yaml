@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: todo_minder_database
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 11223344
+      MYSQL_DATABASE: todo_miner
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 11223344
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - todo_miner_network
+
+volumes:
+  mysql_data:
+
+
+networks:
+  todo_miner_network:
+    driver: bridge
