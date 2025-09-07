@@ -1,6 +1,6 @@
 {
-   "name": "todo-mine-backend",
-   "version": "0.0.1",
+   "name": "todo-miner-backend",
+   "version": "1.0.0",
    "description": "Todo Mine - A todo management platform",
    "author": "Hozaifa Bin Masud",
    "private": true,

@@ -26,6 +26,12 @@ const PromptComponent = ({ runAssistant, loading }: PromptComponentProps) => {
                placeholder="Ask me anything about your todos..."
                value={prompt}
                onChange={(e) => setPrompt(e.target.value)}
+               onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey && prompt.trim().length >= 10) {
+                     e.preventDefault();
+                     handleSubmit();
+                  }
+               }}
             />
 
             {/* Right side controls */}
