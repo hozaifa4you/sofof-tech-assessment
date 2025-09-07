@@ -4,6 +4,7 @@ import { SayHelloDto } from '@/ai-agent/dtos/say-hello.dto';
 import { ChatCompletionMessageParam } from 'groq-sdk/resources/chat.mjs';
 import { StartConversationDto } from './dtos/start-conversation.dto';
 import { AiAgentRepository } from './ai-agent.repository';
+import crypto from 'crypto';
 
 @Injectable()
 export class AiAgentService {
@@ -201,8 +202,9 @@ export class AiAgentService {
          messages.push(choose.message);
 
          if (!choose.message.tool_calls) {
-            return { message: choose.message, tool_calls: false };
-            break;
+            const id = crypto.randomUUID();
+            const messageObj = { id, ...choose.message };
+            return messageObj;
          }
 
          const toolToCall = choose.message.tool_calls;
