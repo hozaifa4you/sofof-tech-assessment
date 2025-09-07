@@ -14,6 +14,5 @@ export const createTodoSchema = z.object({
       .refine((file) => file.size <= 1 * 1024 * 1024, {
          message: "Image size should be less than 1MB",
       })
-      .optional()
-      .or(z.literal("").optional()),
+      .optional(),
 });
