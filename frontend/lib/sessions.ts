@@ -19,7 +19,7 @@ export type Session = {
 const encodedKey = new TextEncoder().encode(env.jwtSecret);
 
 export async function createSession(payload: Session) {
-   const expiredAt = new Date(Date.now() + +env.jwtExpirationNumber);
+   const expiredAt = new Date(Date.now() + env.jwtExpirationNumber);
 
    const session = await new SignJWT(payload)
       .setProtectedHeader({ alg: "HS256" })
@@ -49,7 +49,7 @@ export async function getSession() {
 
       return payload as Session;
    } catch (err) {
-      console.error("Failed to verify the session", err);
+      console.error("Failed to verify the session: ", { err });
       await deleteSession();
       return null;
    }
@@ -78,7 +78,7 @@ export async function updateTokens({ accessToken }: { accessToken: string }) {
       await createSession(newPayload);
       return newPayload;
    } catch (err) {
-      console.error("Failed to update tokens", err);
+      console.error("Failed to update tokens: ", { err });
       await deleteSession();
       return null;
    }

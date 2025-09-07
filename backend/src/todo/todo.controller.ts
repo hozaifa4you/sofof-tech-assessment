@@ -3,40 +3,145 @@ import {
    Get,
    Post,
    Body,
-   Patch,
    Param,
    Delete,
+   HttpCode,
+   HttpStatus,
+   UseGuards,
+   UseInterceptors,
+   UploadedFile,
+   Query,
+   Put,
+   ParseIntPipe,
+   Patch,
 } from '@nestjs/common';
-import { TodoService } from './todo.service';
-import { CreateTodoDto } from './dto/create-todo.dto';
-import { UpdateTodoDto } from './dto/update-todo.dto';
+import { TodoService } from '@/todo/todo.service';
+import { CreateTodoDto } from '@/todo/dto/create-todo.dto';
+import { UpdateTodoDto } from '@/todo/dto/update-todo.dto';
+import { JwtGuard } from '@/auth/guards/jwt.guard';
+import { AuthUser } from '@/auth/decorators/auth-user.decorator';
+import type { AuthUserType } from '@/types/auth-user';
+import { AuthorGuard } from '@/todo/guards/author.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import fs from 'fs';
+import path from 'path';
+import { ParseTodoDate } from './pipes/parse-todo-date.pipe';
+import { ParseStatusPipe } from './pipes/parse-status.pipe';
+import { TodoStatus } from '@/types/todo';
 
-@Controller('todo')
+@UseGuards(JwtGuard)
+@Controller('todos')
 export class TodoController {
    constructor(private readonly todoService: TodoService) {}
 
+   @HttpCode(HttpStatus.OK)
+   @Get('/todays')
+   async getTodaysTodos(@AuthUser() user: AuthUserType) {
+      return this.todoService.getTodaysTodos(user.id);
+   }
+
+   @HttpCode(HttpStatus.CREATED)
+   @UseInterceptors(
+      FileInterceptor('image', {
+         storage: diskStorage({
+            destination: (file, req, callback) => {
+               const uploadpath = './public/uploads';
+
+               if (!fs.existsSync(uploadpath)) {
+                  fs.mkdirSync(uploadpath, { recursive: true });
+               }
+
+               callback(null, uploadpath);
+            },
+            filename: (req, file, callback) => {
+               const rawFilename = file.originalname
+                  .replace(/\.[^/.]+$/, '')
+                  .replace(/\s+/g, '-')
+                  .toLowerCase();
+               const extName = path.extname(file.originalname);
+               const filename = `${rawFilename}-${Date.now()}${extName}`;
+
+               callback(null, filename);
+            },
+         }),
+      }),
+   )
    @Post()
-   create(@Body() createTodoDto: CreateTodoDto) {
-      return this.todoService.create(createTodoDto);
+   async create(
+      @Body() createTodoDto: CreateTodoDto,
+      @AuthUser() user: AuthUserType,
+      @UploadedFile() file?: Express.Multer.File,
+   ) {
+      return this.todoService.create(user.id, createTodoDto, file);
    }
 
+   @HttpCode(HttpStatus.OK)
    @Get()
-   findAll() {
-      return this.todoService.findAll();
+   async findAll(
+      @AuthUser() user: AuthUserType,
+      @Query('date', ParseTodoDate) date?: Date,
+      @Query('search') search?: string,
+   ) {
+      return this.todoService.findAll(user.id, date, search);
    }
 
+   @HttpCode(HttpStatus.OK)
    @Get(':id')
-   findOne(@Param('id') id: string) {
-      return this.todoService.findOne(+id);
+   async findById(@Param('id', ParseIntPipe) id: number) {
+      return this.todoService.findById(id);
    }
 
-   @Patch(':id')
-   update(@Param('id') id: string, @Body() updateTodoDto: UpdateTodoDto) {
-      return this.todoService.update(+id, updateTodoDto);
+   @HttpCode(HttpStatus.OK)
+   @UseInterceptors(
+      FileInterceptor('image', {
+         storage: diskStorage({
+            destination: (file, req, callback) => {
+               const uploadpath = './public/uploads';
+
+               if (!fs.existsSync(uploadpath)) {
+                  fs.mkdirSync(uploadpath, { recursive: true });
+               }
+
+               callback(null, uploadpath);
+            },
+            filename: (req, file, callback) => {
+               const rawFilename = file.originalname
+                  .replace(/\.[^/.]+$/, '')
+                  .replace(/\s+/g, '-')
+                  .toLowerCase();
+               const extName = path.extname(file.originalname);
+               const filename = `${rawFilename}-${Date.now()}${extName}`;
+
+               callback(null, filename);
+            },
+         }),
+      }),
+   )
+   @UseGuards(AuthorGuard)
+   @Put(':id')
+   async update(
+      @Param('id', ParseIntPipe) id: number,
+      @Body() updateTodoDto: UpdateTodoDto,
+      @UploadedFile() file?: Express.Multer.File,
+   ) {
+      return this.todoService.update(id, updateTodoDto, file);
    }
 
+   @HttpCode(HttpStatus.NO_CONTENT)
+   @UseGuards(AuthorGuard)
    @Delete(':id')
-   remove(@Param('id') id: string) {
+   async remove(@Param('id') id: string) {
       return this.todoService.remove(+id);
+   }
+
+   @HttpCode(HttpStatus.OK)
+   @UseGuards(AuthorGuard)
+   @Patch(':id/status')
+   public async updateStatus(
+      @Param('id', ParseIntPipe) id: number,
+      @Query('status', ParseStatusPipe) status: TodoStatus,
+   ) {
+      return this.todoService.updateStatus(id, status);
    }
 }

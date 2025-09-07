@@ -20,6 +20,13 @@
          "recommended": true,
          "suspicious": {
             "noUnknownAtRules": "off"
+         },
+         "nursery": {
+            "useSortedClasses": {
+               "level": "warn",
+               "fix": "safe",
+               "options": {}
+            }
          }
       },
       "domains": {
@@ -30,7 +37,8 @@
    "assist": {
       "actions": {
          "source": {
-            "organizeImports": "on"
+            "organizeImports": "on",
+            "useSortedProperties": "on"
          }
       }
    }

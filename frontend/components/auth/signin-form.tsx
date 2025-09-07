@@ -34,7 +34,7 @@ export const SigninForm: React.FC = () => {
          {/* Email Input */}
          <div>
             <div className="relative">
-               <span className="text-muted-foreground absolute inset-y-0 left-0 flex items-center pl-3">
+               <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground">
                   <MailIcon className="size-5" />
                </span>
                <input
@@ -45,7 +45,7 @@ export const SigninForm: React.FC = () => {
                   defaultValue={
                      (state?.state?.email as unknown as string) || ""
                   }
-                  className="bg-input border-border focus:ring-ring focus:border-ring placeholder:text-muted-foreground text-foreground w-full rounded-lg border py-3 pr-4 pl-10 transition duration-300 outline-none focus:ring-2"
+                  className="w-full rounded-lg border border-border bg-input py-3 pr-4 pl-10 text-foreground outline-none transition duration-300 placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring"
                />
             </div>
             {state?.errors?.email && (
@@ -56,7 +56,7 @@ export const SigninForm: React.FC = () => {
          {/* Password Input */}
          <div>
             <div className="relative">
-               <span className="text-muted-foreground absolute inset-y-0 left-0 flex items-center pl-3">
+               <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground">
                   <LockIcon className="size-5" />
                </span>
                <input
@@ -64,12 +64,12 @@ export const SigninForm: React.FC = () => {
                   placeholder="Password"
                   aria-label="Password"
                   name="password"
-                  className="bg-input border-border focus:ring-ring focus:border-ring placeholder:text-muted-foreground text-foreground w-full rounded-lg border py-3 pr-10 pl-10 transition duration-300 outline-none focus:ring-2"
+                  className="w-full rounded-lg border border-border bg-input py-3 pr-10 pl-10 text-foreground outline-none transition duration-300 placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring"
                />
                <button
                   type="button"
                   onClick={togglePasswordVisibility}
-                  className="text-muted-foreground hover:text-foreground absolute inset-y-0 right-0 flex items-center pr-3"
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground"
                   aria-label={
                      passwordVisible ? "Hide password" : "Show password"
                   }
@@ -87,11 +87,11 @@ export const SigninForm: React.FC = () => {
          </div>
 
          <div className="text-right">
-            <p className="text-muted-foreground text-sm font-medium">
+            <p className="font-medium text-muted-foreground text-sm">
                Forgot password?{" "}
                <Link
                   href="/forgot-password"
-                  className="text-primary font-medium hover:underline"
+                  className="font-medium text-primary hover:underline"
                >
                   Reset it here
                </Link>
