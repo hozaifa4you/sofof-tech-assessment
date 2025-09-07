@@ -88,12 +88,12 @@ export const SigninForm: React.FC = () => {
 
          <div className="text-right">
             <p className="font-medium text-muted-foreground text-sm">
-               Forgot password?{" "}
+               Don't have an account?
                <Link
-                  href="/forgot-password"
+                  href="/signup"
                   className="font-medium text-primary hover:underline"
                >
-                  Reset it here
+                  Signup
                </Link>
             </p>
          </div>
