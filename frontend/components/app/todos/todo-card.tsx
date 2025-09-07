@@ -26,23 +26,51 @@ import { DeleteTodo, DeleteTodoModal } from "./delete-todo";
 import { UpdateTodoStatus } from "./update-todo-status";
 
 const TodoCard = ({ ...todo }: TodoType) => {
+   const dateFromNow = moment(todo.date).fromNow();
+
    return (
       <>
          <div className="flex w-full gap-2 overflow-hidden rounded-lg border p-4 transition-all duration-200 ease-in-out hover:border-primary/50">
-            <div className="relative">
+            <div className="flex flex-col items-center gap-2">
                <button type="button" className="size-fit">
-                  <CheckCircleIcon className="size-4" />
+                  <CheckCircleIcon
+                     className={cn("size-4", {
+                        "text-emerald-500": todo.status === "done",
+                        "text-primary": todo.status === "canceled",
+                        "text-yellow-500": todo.status === "pending",
+                        "text-indigo-500": todo.status === "in_progress",
+                     })}
+                  />
                </button>
-               <div className="-left-[45px] absolute top-[65px] size-fit origin-center rotate-90">
-                  <Badge variant="secondary">
-                     <ClockIcon /> {moment(todo.date).fromNow()}
+               <div className="size-fit">
+                  <Badge
+                     variant="secondary"
+                     className="flex flex-col px-0.5 py-2"
+                  >
+                     <ClockIcon />
+                     <span
+                        className="flex flex-col gap-0"
+                        style={{
+                           writingMode: "vertical-rl",
+                           textOrientation: "mixed",
+                        }}
+                     >
+                        {dateFromNow}
+                     </span>
                   </Badge>
                </div>
             </div>
 
             <div className="flex-1 pl-2">
                <div>
-                  <h3 className="-mt-1 line-clamp-2 font-secondary font-semibold text-base text-black/70 leading-normal tracking-normal">
+                  <h3
+                     className={cn(
+                        "-mt-1 line-clamp-2 font-secondary font-semibold text-base text-black/70 leading-normal tracking-normal",
+                        {
+                           "line-through": todo.status === "done",
+                        },
+                     )}
+                  >
                      {todo.title}
                   </h3>
                </div>
