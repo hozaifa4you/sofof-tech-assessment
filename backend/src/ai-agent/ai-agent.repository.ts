@@ -11,7 +11,7 @@ export class AiAgentRepository {
       @InjectRepository(Todo) private readonly todoRepo: Repository<Todo>,
    ) {}
 
-   public async findAllTodosCount(parameters: { userId: number }) {
+   public async findAllTodosCountForAUser(parameters: { userId: number }) {
       return this.todoRepo.count({
          where: { user: { id: parameters.userId } },
       });
@@ -83,5 +83,23 @@ export class AiAgentRepository {
             },
          },
       });
+   }
+
+   public async findAllTodosCount() {
+      return this.todoRepo.count();
+   }
+
+   public async findAllTodosStatusCount() {
+      const done = await this.todoRepo.count({ where: { status: 'done' } });
+      const pending = await this.todoRepo.count({
+         where: { status: 'pending' },
+      });
+      const inProgress = await this.todoRepo.count({
+         where: { status: 'in_progress' },
+      });
+      const canceled = await this.todoRepo.count({
+         where: { status: 'canceled' },
+      });
+      return { done, pending, inProgress, canceled };
    }
 }

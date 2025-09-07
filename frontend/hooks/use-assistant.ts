@@ -12,7 +12,8 @@ export const useAssistant = () => {
       {
          id: "welcome",
          role: "assistant",
-         content: "Hello! I'm your AI assistant. How can I help you today?",
+         content:
+            "Hello! I'm your AI assistant Anisha. How can I help you today?",
       },
    ]);
 
@@ -79,7 +80,7 @@ export const useAssistant = () => {
                id: "welcome",
                role: "assistant",
                content:
-                  "Hello! I'm your AI assistant. How can I help you today?",
+                  "Hello! I'm your AI assistant Anisha. How can I help you today?",
             },
          ]),
    };

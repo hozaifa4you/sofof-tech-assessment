@@ -13,7 +13,7 @@ const AssistantPage = () => {
    return (
       <div className="h-full rounded-xl border p-4">
          <TodoHeader
-            title="AI Assistant"
+            title="AI Assistant (Anisha)"
             button={
                <Link
                   href="/todos/new"
