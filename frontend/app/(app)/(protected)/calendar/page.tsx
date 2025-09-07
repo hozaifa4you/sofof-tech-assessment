@@ -1,4 +1,4 @@
-import type { CalendarEvent } from "@/components/event-calendar";
+import type { CalendarEvent } from "@/components/app/event-calendar";
 import { EventCalendarContainer } from "@/components/event-calendar-container";
 import { fetchWithAuth } from "@/lib/authFetch";
 

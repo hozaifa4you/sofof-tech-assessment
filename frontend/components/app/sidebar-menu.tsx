@@ -1,5 +1,11 @@
 "use client";
-import { CalendarSyncIcon, GaugeIcon, ListTodo, PlusIcon } from "lucide-react";
+import {
+   BotMessageSquareIcon,
+   CalendarSyncIcon,
+   GaugeIcon,
+   ListTodo,
+   PlusIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ComponentType } from "react";
@@ -24,6 +30,7 @@ const todos: Todo[] = [
    },
    { id: 2, title: "Todo List", url: "/todos", Icon: ListTodo },
    { id: 3, title: "Calendar", url: "/calendar", Icon: CalendarSyncIcon },
+   { id: 4, title: "Assistant", url: "/assistant", Icon: BotMessageSquareIcon },
 ];
 
 const SidebarMenu = () => {

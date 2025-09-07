@@ -1,6 +1,9 @@
 "use client";
 import { useState } from "react";
-import { type CalendarEvent, EventCalendar } from "@/components/event-calendar";
+import {
+   type CalendarEvent,
+   EventCalendar,
+} from "@/components/app/event-calendar";
 
 interface EventCalendarContainerProps {
    initialEvents: CalendarEvent[];

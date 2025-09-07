@@ -15,7 +15,7 @@ import {
    startOfWeek,
 } from "date-fns";
 import { useMemo } from "react";
-import { EndHour, StartHour } from "@/components/event-calendar/constants";
+import { EndHour, StartHour } from "@/components/app/event-calendar/constants";
 import { cn } from "@/lib/utils";
 import {
    type CalendarEvent,

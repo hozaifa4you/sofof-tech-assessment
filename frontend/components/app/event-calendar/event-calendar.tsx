@@ -26,7 +26,7 @@ import {
    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { ResponsiveSidebar } from "../app/todos/responsive-sidebar";
+import { ResponsiveSidebar } from "../todos/responsive-sidebar";
 import { AgendaView } from "./agenda-view";
 import {
    AgendaDaysToShow,

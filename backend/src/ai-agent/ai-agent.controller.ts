@@ -2,9 +2,9 @@ import { JwtGuard } from '@/auth/guards/jwt.guard';
 import {
    Body,
    Controller,
-   Get,
    HttpCode,
    HttpStatus,
+   Post,
    UseGuards,
 } from '@nestjs/common';
 import { AiAgentService } from './ai-agent.service';
@@ -18,13 +18,13 @@ import type { AuthUserType } from '@/types/auth-user';
 export class AiAgentController {
    constructor(private readonly aiAgentService: AiAgentService) {}
 
-   @Get('say-hello')
+   @Post('say-hello')
    @HttpCode(HttpStatus.OK)
    public async getHello(@Body() sayHelloDto: SayHelloDto) {
       return this.aiAgentService.getHello(sayHelloDto);
    }
 
-   @Get('start-conversation')
+   @Post('start-conversation')
    @HttpCode(HttpStatus.OK)
    public async startConversation(
       @Body() prompt: StartConversationDto,

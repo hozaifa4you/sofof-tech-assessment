@@ -1,13 +1,13 @@
 import Image from "next/image";
-import { SigninForm } from "@/components/app/auth/signin-form";
+import { SigninForm } from "@/components/auth/signin-form";
 import { FacebookIcon, GitHubIcon, GoogleIcon } from "@/components/icons";
 
 const SigninPage = () => {
    return (
       <div className="container flex min-h-screen flex-col items-center justify-center">
-         <div className="text-foreground bg-card border-border mx-auto w-full max-w-md rounded-3xl border p-8 font-sans shadow-2xl">
+         <div className="mx-auto w-full max-w-md rounded-3xl border border-border bg-card p-8 font-sans text-foreground shadow-2xl">
             <div className="mb-6 flex justify-center">
-               <div className="bg-accent border-border flex h-12 w-12 items-center justify-center rounded-lg border">
+               <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-border bg-accent">
                   <Image
                      src="/assets/logo.svg"
                      alt="Logo"
@@ -17,39 +17,39 @@ const SigninPage = () => {
                </div>
             </div>
 
-            <h1 className="text-foreground mb-8 text-center text-3xl font-bold">
+            <h1 className="mb-8 text-center font-bold text-3xl text-foreground">
                Signin with email
             </h1>
 
             <SigninForm />
 
             <div className="my-6 flex items-center">
-               <hr className="border-border flex-grow border-t" />
-               <span className="text-muted-foreground mx-4 text-sm">
+               <hr className="flex-grow border-border border-t" />
+               <span className="mx-4 text-muted-foreground text-sm">
                   Or login with
                </span>
-               <hr className="border-border flex-grow border-t" />
+               <hr className="flex-grow border-border border-t" />
             </div>
 
             <div className="flex justify-center space-x-4">
                <button
                   type="button"
                   aria-label="Sign in with Google"
-                  className="bg-card border-border hover:bg-accent hover:text-accent-foreground flex h-12 w-12 transform items-center justify-center rounded-full border transition-transform hover:scale-110"
+                  className="flex h-12 w-12 transform items-center justify-center rounded-full border border-border bg-card transition-transform hover:scale-110 hover:bg-accent hover:text-accent-foreground"
                >
                   <GoogleIcon />
                </button>
                <button
                   type="button"
                   aria-label="Sign in with Facebook"
-                  className="bg-card border-border hover:bg-accent hover:text-accent-foreground flex h-12 w-12 transform items-center justify-center rounded-full border transition-transform hover:scale-110"
+                  className="flex h-12 w-12 transform items-center justify-center rounded-full border border-border bg-card transition-transform hover:scale-110 hover:bg-accent hover:text-accent-foreground"
                >
                   <FacebookIcon />
                </button>
                <button
                   type="button"
                   aria-label="Sign in with Apple"
-                  className="bg-card border-border hover:bg-accent hover:text-accent-foreground flex h-12 w-12 transform items-center justify-center rounded-full border transition-transform hover:scale-110"
+                  className="flex h-12 w-12 transform items-center justify-center rounded-full border border-border bg-card transition-transform hover:scale-110 hover:bg-accent hover:text-accent-foreground"
                >
                   <GitHubIcon />
                </button>
