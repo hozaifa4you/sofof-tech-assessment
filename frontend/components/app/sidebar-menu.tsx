@@ -12,7 +12,9 @@ import type { ComponentType } from "react";
 import { SearchTodos } from "@/components/app/todos/search-todos";
 import { Logo } from "@/components/logo";
 import { buttonVariants } from "@/components/ui/button";
+import { useSession } from "@/hooks/use-session";
 import { cn } from "@/lib/utils";
+import { UserMenu } from "../user-menu";
 
 export type Todo = {
    id: number;
@@ -35,9 +37,10 @@ const todos: Todo[] = [
 
 const SidebarMenu = () => {
    const pathname = usePathname();
+   const session = useSession();
 
    return (
-      <div className="h-full w-full rounded-xl bg-accent p-4">
+      <div className="flex h-full w-full flex-col rounded-xl bg-accent p-4">
          <div className="flex items-center justify-between gap-4">
             <Logo />
 
@@ -60,7 +63,7 @@ const SidebarMenu = () => {
             <SearchTodos />
          </div>
 
-         <div className="mt-4 h-full">
+         <div className="mt-4">
             <h4 className="font-secondary font-semibold text-lg">Menu</h4>
             <ul className="space-y-1">
                {todos.map((todo) => (
@@ -83,6 +86,15 @@ const SidebarMenu = () => {
                   </li>
                ))}
             </ul>
+         </div>
+
+         <div className="mt-auto w-full">
+            <UserMenu
+               user={{
+                  name: session?.user?.name ?? "",
+                  email: session?.user?.email ?? "",
+               }}
+            />
          </div>
       </div>
    );
