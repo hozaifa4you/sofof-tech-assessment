@@ -8,15 +8,17 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { CalendarModule } from './calendar/calendar.module';
+import { AiAgentModule } from './ai-agent/ai-agent.module';
 import appConfig from '@/config/app.config';
 import dbConfig from '@/config/db.config';
 import jwtConfig from './config/jwt.config';
+import groqConfig from '@/config/groq.config';
 
 @Module({
    imports: [
       ConfigModule.forRoot({
          isGlobal: true,
-         load: [appConfig, dbConfig, jwtConfig],
+         load: [appConfig, dbConfig, jwtConfig, groqConfig],
       }),
       TypeOrmModule.forRootAsync({
          imports: [ConfigModule],
@@ -40,6 +42,7 @@ import jwtConfig from './config/jwt.config';
       UserModule,
       AnalyticsModule,
       CalendarModule,
+      AiAgentModule,
    ],
    controllers: [AppController],
    providers: [AppService],

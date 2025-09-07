@@ -4,7 +4,9 @@ import { Todo } from './entities/todo.entity';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 import { TodoStatus } from '@/types/todo';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class TodoRepository {
    constructor(
       @InjectRepository(Todo)
