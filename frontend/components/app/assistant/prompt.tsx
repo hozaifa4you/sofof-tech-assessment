@@ -2,11 +2,14 @@
 import { ArrowUp } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { useAssistant } from "@/hooks/use-assistant";
 
-const PromptComponent = () => {
+interface PromptComponentProps {
+   runAssistant: (prompt: string) => void;
+   loading: boolean;
+}
+
+const PromptComponent = ({ runAssistant, loading }: PromptComponentProps) => {
    const [prompt, setPrompt] = useState("");
-   const { runAssistant, loading } = useAssistant();
 
    const handleSubmit = () => {
       if (prompt.trim().length < 10) return;
@@ -20,7 +23,7 @@ const PromptComponent = () => {
             <textarea
                className="w-full resize-none bg-transparent font-medium text-base text-gray-800 leading-relaxed placeholder-gray-500 focus:outline-none dark:text-gray-100 dark:placeholder-gray-400"
                rows={3}
-               placeholder="Describe your 3D object or scene..."
+               placeholder="Ask me anything about your todos..."
                value={prompt}
                onChange={(e) => setPrompt(e.target.value)}
             />
